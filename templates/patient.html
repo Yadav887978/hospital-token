@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Maharashtra Hospital Token</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f0f8ff;padding:20px;text-align:center}
+.box{background:white;padding:30px;border-radius:15px;max-width:400px;margin:auto;box-shadow:0 4px 10px #ccc}
+select,button{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;font-size:16px}
+button{background:#007bff;color:white;border:none;font-weight:bold}
+h2{color:#007bff}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>🏥 Hospital Token System</h2>
+<form action="/generate_token" method="post">
+<select name="hospital" id="hospital" required onchange="loadOPD()">
+<option value="">City + Hospital Select Karo</option>
+{% for h in hospitals %}
+<option value="{{h.id}}">{{h.city}} - {{h.name}}</option>
+{% endfor %}
+</select>
+
+<select name="opd" id="opd" required>
+<option value="">Pehle Hospital Chuno</option>
+</select>
+
+<select name="type" required>
+<option value="Normal">Normal Token - ₹20</option>
+<option value="Emergency">Emergency Token - ₹30</option>
+</select>
+
+<button type="submit">Token Nikalo</button>
+</form>
+<p><a href="/doctor" style="color:#28a745">Doctor Login</a></p>
+</div>
+
+<script>
+function loadOPD(){
+let h_id=document.getElementById('hospital').value;
+fetch('/get_opd/'+h_id).then(r=>r.json()).then(data=>{
+let opd=document.getElementById('opd');
+opd.innerHTML='<option value="">OPD Select Karo</option>';
+data.opds.forEach(o=>{
+opd.innerHTML+=`<option value="${o.id}">${o.code} - ${o.name}</option>`;
+});
+}
+</script>
+</body>
+</html>
