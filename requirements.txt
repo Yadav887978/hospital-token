@@ -1,4 +1,2 @@
-flask
-flask-sqlalchemy
-python-dotenv
-gunicorn
+Flask
+qrcode[pil]
