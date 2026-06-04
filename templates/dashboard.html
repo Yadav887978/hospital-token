@@ -7,22 +7,27 @@
 <style>
 body{background:#1a1a2e;color:white;font-family:Arial;padding:20px;text-align:center}
 h1{color:#00ff88;font-size:32px}
-.token-box{background:#16213e;padding:20px;margin:15px;border-radius:15px;display:inline-block;min-width:200px}
-.waiting{color:#ffaa00;font-size:24px}
-.done{color:#00ff88;font-size:24px;text-decoration:line-through}
-.big-token{font-size:60px;font-weight:bold;color:#ff6b6b;margin:10px}
+.token-box{background:#16213e;padding:20px;margin:15px;border-radius:15px;display:inline-block;min-width:220px;border:3px solid}
+.normal{border-color:#ffaa00}
+.emergency{border-color:red;animation:blink 1s infinite}
+@keyframes blink{50%{background:#3e0000}}
+.big-token{font-size:60px;font-weight:bold;margin:10px}
+.normal.big-token{color:#ffaa00}
+.emergency.big-token{color:red;font-size:70px}
+.alert{font-size:18px;font-weight:bold;margin:5px}
+.emergency.alert{color:red}
 a{background:#007bff;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;margin:5px}
 </style>
 </head>
 <body>
 <h1>🏥 Doctor Dashboard - Live Token</h1>
-<p>Screen khud refresh hoti rahegi</p>
+<p>🔴 Lal = Emergency | 🟡 Peela = Normal | Screen 5 sec me refresh</p>
 
 {% for t in tokens %}
-<div class="token-box">
-<h3>OPD: {{t.opd_id}} | {{t.token_type}}</h3>
+<div class="token-box {{t.token_type.lower()}}">
+<h3>OPD: {{t.opd_id}}</h3>
 <div class="big-token">{{t.token_type[0]}}-{{t.token_no}}</div>
-<p class="waiting">Status: {{t.status}}</p>
+<p class="alert">{{t.token_type}} PATIENT</p>
 <p>Fees: ₹{{t.fees}}</p>
 <a href="/next/{{t.id}}">Next Patient</a>
 </div>
