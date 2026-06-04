@@ -19,10 +19,8 @@ h2{font-size:20px;margin:8px}
 <h2>{{opd.opd_code}} - {{opd.opd_name}}</h2>
 <p>Token Type: {{token.token_type}}</p>
 <div class="big">{{token.token_type[0]}}-{{token.token_no}}</div>
-<p><b>Fees: ₹{{token.fees}}</b></p>
-<p>{{time.strftime('%d-%b-%Y %I:%M %p')}}</p>
-<hr>
-<small>Doctor ke cabin ke bahar screen dekhe</small>
+<div style="margin:15px 0;border:2px solid #007bff;padding:10px;border-radius:10px;text-align:center">
+<img src="data:image/png;base64,{{qr_code}}" width="160" height="160">
+<p style="font-size:16px;margin:5px"><b>Scan & Pay: ₹{{amount}}</b></p>
+<p style="font-size:10px;color:gray">UPI: 8879789073-2@ybl</p>
 </div>
-</body>
-</html>
