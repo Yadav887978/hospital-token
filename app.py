@@ -4,8 +4,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'maharashtra123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
-db.init_app(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Pehli baar database banega + 2 hospital add honge
 with app.app_context():
@@ -70,7 +70,7 @@ def next_token(t_id):
     token = Token.query.get(t_id)
     token.status='Done'
     db.session.commit()
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('dashboard')
 
-if __name__=='__main__':
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
