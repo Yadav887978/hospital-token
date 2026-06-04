@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Doctor Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="5">
+<style>
+body{background:#1a1a2e;color:white;font-family:Arial;padding:20px;text-align:center}
+h1{color:#00ff88;font-size:32px}
+.token-box{background:#16213e;padding:20px;margin:15px;border-radius:15px;display:inline-block;min-width:200px}
+.waiting{color:#ffaa00;font-size:24px}
+.done{color:#00ff88;font-size:24px;text-decoration:line-through}
+.big-token{font-size:60px;font-weight:bold;color:#ff6b6b;margin:10px}
+a{background:#007bff;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;margin:5px}
+</style>
+</head>
+<body>
+<h1>🏥 Doctor Dashboard - Live Token</h1>
+<p>Screen khud refresh hoti rahegi</p>
+
+{% for t in tokens %}
+<div class="token-box">
+<h3>OPD: {{t.opd_id}} | {{t.token_type}}</h3>
+<div class="big-token">{{t.token_type[0]}}-{{t.token_no}}</div>
+<p class="waiting">Status: {{t.status}}</p>
+<p>Fees: ₹{{t.fees}}</p>
+<a href="/next/{{t.id}}">Next Patient</a>
+</div>
+{% endfor %}
+
+{% if tokens|length==0 %}
+<h2 style="color:#ffaa00">Aaj koi waiting patient nahi hai</h2>
+{% endif %}
+</body>
+</html>
