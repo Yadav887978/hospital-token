@@ -1,2 +1,5 @@
 Flask
+flask-sqlalchemy
+python-dotenv
+gunicorn
 qrcode[pil]
