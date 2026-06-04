@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Token Slip</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#f0f8ff;padding:20px;font-family:Arial}
+.slip{background:white;border:3px dashed #007bff;padding:25px;max-width:350px;margin:auto;text-align:center}
+h1{color:#007bff;font-size:24px;margin:5px}
+h2{font-size:20px;margin:8px}
+.big{font-size:45px;color:red;font-weight:bold;margin:10px}
+</style>
+</head>
+<body>
+<div class="slip">
+<h1>{{hospital.name}}</h1>
+<p>{{hospital.city}} Municipal Hospital</p>
+<hr>
+<h2>{{opd.opd_code}} - {{opd.opd_name}}</h2>
+<p>Token Type: {{token.token_type}}</p>
+<div class="big">{{token.token_type[0]}}-{{token.token_no}}</div>
+<p><b>Fees: ₹{{token.fees}}</b></p>
+<p>{{time.strftime('%d-%b-%Y %I:%M %p')}}</p>
+<hr>
+<small>Doctor ke cabin ke bahar screen dekhe</small>
+</div>
+</body>
+</html>
