@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'hospital_secret_key_123'
 
 # Database - Render pe SQLite file ban jayegi
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////var/data/hospital.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
