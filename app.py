@@ -28,10 +28,12 @@ class Patient(db.Model):
     upi_id = db.Column(db.String(100), default='8879789073-2@ybl')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# Render free plan ke liye auto table create
 with app.app_context():
     db.create_all()
+    print("Database tables created successfully!")
 
-# Maharashtra ke Govt Hospital ka list - tu aur add kar sakta hai
+# Maharashtra ke Govt Hospital ka list
 HOSPITAL_LIST = [
     'JJ Hospital, Mumbai',
     'KEM Hospital, Mumbai',
