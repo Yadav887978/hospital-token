@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import qrcode
+import io
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
@@ -94,7 +97,17 @@ def book_token(hospital_id):
         db.session.add(new_token)
         db.session.commit()
         
-        return render_template('token_slip.html', token=new_token, hospital=hospital, opd=OPD.query.get(opd_id))
+        # QR Code generate kare
+        qr_data = f"Token:{token_no} | Hospital:{hospital.name} | Patient:{patient_name} | Type:{token_type} | Fees:₹{fees}"
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffered = io.BytesIO()
+        img.save(buffered, format="PNG")
+        qr_img = base64.b64encode(buffered.getvalue()).decode()
+        
+        return render_template('token_slip.html', token=new_token, hospital=hospital, opd=OPD.query.get(opd_id), qr_img=qr_img)
     
     return render_template('book_token.html', hospital=hospital, opds=opds)
 
