@@ -1,116 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Maharashtra Govt Hospital Token</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {font-family:Arial; background:#f0f2f5; margin:0; padding:20px;}
+.container {max-width:500px; margin:auto; background:white; padding:25px; border-radius:12px;}
+h2 {text-align:center; color:#007bff;}
+label {font-weight:bold; margin-top:15px; display:block;}
+input, select {width:100%; padding:12px; margin-top:5px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;}
+button {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-size:16px; margin-top:20px;}
+.token-slip {text-align:center; padding:25px; border:2px dashed #007bff; border-radius:12px; margin-top:20px; background:#e7f3ff;}
+.token-no {font-size:48px; font-weight:bold; color:#dc3545;}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>🏥 Maharashtra Govt Hospital Token</h2>
+
+{% if not patient %}
+<form method="post">
+
 <label>Select Hospital:</label>
 <select name="hospital" required>
-    <option value="">-- Hospital Chuno --</option>
-    
-    <!-- Mumbai -->
-    <option value="JJ Hospital Mumbai">JJ Hospital Mumbai</option>
-    <option value="KEM Hospital Mumbai">KEM Hospital Mumbai</option>
-    <option value="Sion Hospital Mumbai">Sion Hospital Mumbai</option>
-    <option value="Nair Hospital Mumbai">Nair Hospital Mumbai</option>
-    <option value="Cooper Hospital Mumbai">Cooper Hospital Mumbai</option>
-    <option value="Baba Hospital Mumbai">Baba Hospital Mumbai</option>
-    <option value="Rajawadi Hospital Mumbai">Rajawadi Hospital Mumbai</option>
-    <option value="Shatabdi Hospital Mumbai">Shatabdi Hospital Mumbai</option>
-    
-    <!-- Pune -->
-    <option value="Sasoon Hospital Pune">Sasoon Hospital Pune</option>
-    <option value="Civil Hospital Pune">Civil Hospital Pune</option>
-    <option value="Aundh Hospital Pune">Aundh Hospital Pune</option>
-    
-    <!-- Nagpur -->
-    <option value="GMCH Nagpur">GMCH Nagpur</option>
-    <option value="Indira Gandhi Hospital Nagpur">Indira Gandhi Hospital Nagpur</option>
-    <option value="MAHAN Trust Hospital Nagpur">MAHAN Trust Hospital Nagpur</option>
-    
-    <!-- Nashik -->
-    <option value="Civil Hospital Nashik">Civil Hospital Nashik</option>
-    <option value="Bhabha Hospital Nashik">Bhabha Hospital Nashik</option>
-    
-    <!-- Aurangabad / Chh. Sambhajinagar -->
-    <option value="GMCH Aurangabad">GMCH Aurangabad</option>
-    <option value="Ghati Hospital Aurangabad">Ghati Hospital Aurangabad</option>
-    
-    <!-- Solapur -->
-    <option value="Irrwin Hospital Solapur">Irrwin Hospital Solapur</option>
-    <option value="Civil Hospital Solapur">Civil Hospital Solapur</option>
-    
-    <!-- Kolhapur -->
-    <option value="CPR Hospital Kolhapur">CPR Hospital Kolhapur</option>
-    <option value="District Hospital Kolhapur">District Hospital Kolhapur</option>
-    
-    <!-- Sangli -->
-    <option value="Civil Hospital Sangli">Civil Hospital Sangli</option>
-    
-    <!-- Satara -->
-    <option value="Civil Hospital Satara">Civil Hospital Satara</option>
-    
-    <!-- Ahmednagar -->
-    <option value="Civil Hospital Ahmednagar">Civil Hospital Ahmednagar</option>
-    
-    <!-- Dhule -->
-    <option value="Civil Hospital Dhule">Civil Hospital Dhule</option>
-    
-    <!-- Jalgaon -->
-    <option value="Civil Hospital Jalgaon">Civil Hospital Jalgaon</option>
-    
-    <!-- Amravati -->
-    <option value="IMCH Amravati">IMCH Amravati</option>
-    <option value="District Hospital Amravati">District Hospital Amravati</option>
-    
-    <!-- Akola -->
-    <option value="District Hospital Akola">District Hospital Akola</option>
-    
-    <!-- Latur -->
-    <option value="District Hospital Latur">District Hospital Latur</option>
-    
-    <!-- Osmanabad / Dharashiv -->
-    <option value="District Hospital Osmanabad">District Hospital Osmanabad</option>
-    
-    <!-- Beed -->
-    <option value="District Hospital Beed">District Hospital Beed</option>
-    
-    <!-- Nanded -->
-    <option value="Dr Shankarrao Hospital Nanded">Dr Shankarrao Hospital Nanded</option>
-    
-    <!-- Parbhani -->
-    <option value="District Hospital Parbhani">District Hospital Parbhani</option>
-    
-    <!-- Hingoli -->
-    <option value="District Hospital Hingoli">District Hospital Hingoli</option>
-    
-    <!-- Ratnagiri -->
-    <option value="District Hospital Ratnagiri">District Hospital Ratnagiri</option>
-    
-    <!-- Sindhudurg -->
-    <option value="District Hospital Sindhudurg">District Hospital Sindhudurg</option>
-    
-    <!-- Raigad -->
-    <option value="District Hospital Raigad">District Hospital Raigad</option>
-    
-    <!-- Thane -->
-    <option value="Thane Civil Hospital">Thane Civil Hospital</option>
-    
-    <!-- Palghar -->
-    <option value="District Hospital Palghar">District Hospital Palghar</option>
-    
-    <!-- Gondia -->
-    <option value="District Hospital Gondia">District Hospital Gondia</option>
-    
-    <!-- Bhandara -->
-    <option value="District Hospital Bhandara">District Hospital Bhandara</option>
-    
-    <!-- Wardha -->
-    <option value="District Hospital Wardha">District Hospital Wardha</option>
-    
-    <!-- Yavatmal -->
-    <option value="District Hospital Yavatmal">District Hospital Yavatmal</option>
-    
-    <!-- Washim -->
-    <option value="District Hospital Washim">District Hospital Washim</option>
-    
-    <!-- Buldhana -->
-    <option value="District Hospital Buldhana">District Hospital Buldhana</option>
-    
-    <!-- Jalna -->
-    <option value="District Hospital Jalna">District Hospital Jalna</option>
+<option value="">-- Hospital Chuno --</option>
+<option value="JJ Hospital Mumbai">JJ Hospital Mumbai</option>
+<option value="KEM Hospital Mumbai">KEM Hospital Mumbai</option>
+<option value="Sion Hospital Mumbai">Sion Hospital Mumbai</option>
+<option value="Sasoon Hospital Pune">Sasoon Hospital Pune</option>
+<option value="GMCH Nagpur">GMCH Nagpur</option>
+<!-- Baaki 45 hospital bhi yahi daal de jo pichle msg me bheje the -->
 </select>
+
+<label>Select Bimari / Disease:</label>
+<select name="disease" id="disease" required>
+<option value="">-- Bimari Chuno --</option>
+<option value="Fever / Sardi Khasi">Fever / Sardi Khasi</option>
+<option value="Heart / BP">Heart / BP</option>
+<option value="Skin / Allergy">Skin / Allergy</option>
+<option value="Ortho / Haddi">Ortho / Haddi</option>
+<option value="Gynecology">Gynecology</option>
+</select>
+
+<label>OPD / Doctor Room:</label>
+<select name="opd" id="opd" required>
+<option value="">-- Pehle Bimari Chuno --</option>
+<option value="OPD 101 - General Medicine" data-disease="Fever / Sardi Khasi">OPD 101 - General Medicine</option>
+<option value="OPD 201 - Cardiology" data-disease="Heart / BP">OPD 201 - Cardiology</option>
+<option value="OPD 301 - Dermatology" data-disease="Skin / Allergy">OPD 301 - Dermatology</option>
+<option value="OPD 401 - Orthopedics" data-disease="Ortho / Haddi">OPD 401 - Orthopedics</option>
+<option value="OPD 501 - Gynecology" data-disease="Gynecology">OPD 501 - Gynecology</option>
+</select>
+
+<label>Patient Name:</label>
+<input type="text" name="patient_name" required>
+
+<label>Address:</label>
+<input type="text" name="address" required>
+
+<input type="hidden" name="amount" value="30">
+
+<button type="submit">🎫 Token Generate - Pay ₹30</button>
+</form>
+
+<script>
+document.getElementById('disease').addEventListener('change', function() {
+var disease = this.value;
+var opdSelect = document.getElementById('opd');
+for(var i=0; i<opdSelect.options.length; i++) {
+opdSelect.options[i].style.display = 'none';
+}
+opdSelect.options[0].style.display = 'block';
+for(var i=1; i<opdSelect.options.length; i++) {
+if(opdSelect.options[i].getAttribute('data-disease') == disease) {
+opdSelect.options[i].style.display = 'block';
+opdSelect.value = opdSelect.options[i].value;
+}
+});
+</script>
+
+{% else %}
+<div class="token-slip">
+<div>Token Number</div>
+<div class="token-no">#{{patient.id}}</div>
+<div>{{patient.patient_name}}</div>
+<div style="color:#007bff; font-weight:bold;">{{patient.hospital}}</div>
+<div>{{patient.opd}}</div>
+<div><b>Bimari:</b> {{patient.disease}}</div>
+<div>Fee: ₹{{patient.amount}}</div>
+<form method="post" action="/checkin/{{patient.id}}">
+<button type="submit" style="background:#007bff;">🏥 Check In</button>
+</form>
+</div>
+{% endif %}
+</div>
+</body>
+</html>
