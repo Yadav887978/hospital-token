@@ -1,25 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-    <title>Hospital Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">🏥 Hospital Token System</h2>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Token System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header { 
+            text-align: center; 
+            color: white;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+        .header h1 { 
+            font-size: 36px; 
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p { 
+            font-size: 16px;
+            opacity: 0.9;
+        }
         
-        <div class="row">
+        .hospitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .hospital-card { 
+            background: white; 
+            padding: 30px 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        .hospital-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .hospital-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .hospital-card h3 { 
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .hospital-card .city { 
+            color: #7f8c8d;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .hospital-card .address { 
+            color: #95a5a6;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        .btn { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            border: none; 
+            padding: 12px 30px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn:hover { 
+            transform: scale(1.05);
+        }
+        
+        .doctor-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .doctor-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        .doctor-link a:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 { font-size: 28px; }
+            .hospitals-grid { grid-template-columns: 1fr; gap: 20px; }
+            .hospital-card { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Online Hospital Token System</h1>
+            <p>Line me khade hue bina token le, seedha doctor ke paas jao</p>
+        </div>
+        
+        <div class="hospitals-grid">
             {% for hospital in hospitals %}
-            <div class="col-md-6 mb-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ hospital.name }}</h5>
-                        <p class="card-text">📍 {{ hospital.city }}</p>
-                        <a href="{{ url_for('index', hospital_id=hospital.id) }}" class="btn btn-primary">Token Lo</a>
-                    </div>
-                </div>
+            <div class="hospital-card">
+                <div class="hospital-icon">🏨</div>
+                <h3>{{ hospital.name }}</h3>
+                <p class="city">📍 {{ hospital.city }}</p>
+                <p class="address">{{ hospital.address }}</p>
+                <a href="{{ url_for('book_token', hospital_id=hospital.id) }}" class="btn">Token Book Kare</a>
             </div>
             {% endfor %}
+        </div>
+        
+        <div class="doctor-link">
+            <a href="{{ url_for('doctor_login') }}">👨‍⚕️ Doctor Login Panel</a>
         </div>
     </div>
 </body>
