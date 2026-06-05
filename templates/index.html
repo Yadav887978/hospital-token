@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {font-family:Arial; background:#f0f2f5; margin:0; padding:20px;}
-       .container {max-width:500px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+    .container {max-width:500px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
         h2 {text-align:center; color:#007bff; margin-bottom:25px;}
         label {font-weight:bold; margin-top:15px; display:block; color:#333;}
         input, select {width:100%; padding:12px; margin-top:5px; border:1px solid #ddd; border-radius:8px; font-size:15px; box-sizing:border-box;}
         button {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; margin-top:20px; cursor:pointer;}
-        button:hover {background:#218838;}
-       .token-slip {text-align:center; padding:25px; border:2px dashed #007bff; border-radius:12px; margin-top:20px; background:#e7f3ff;}
-       .token-no {font-size:48px; font-weight:bold; color:#dc3545; margin:10px 0;}
-       .name {font-size:20px; font-weight:bold; margin:5px 0;}
-       .upi {margin:15px 0; padding:15px; background:#fff3cd; border-radius:8px; border:1px solid #ffeeba;}
-       .upi-id {font-size:18px; font-weight:bold; color:#856404;}
+    .opd-box {margin-top:15px; padding:15px; background:#d4edda; border-left:5px solid #28a745; border-radius:8px; display:none; animation:fadeIn 0.3s;}
+    .opd-text {font-size:18px; color:#155724; font-weight:bold;}
+    .token-slip {text-align:center; padding:25px; border:2px dashed #007bff; border-radius:12px; margin-top:20px; background:#e7f3ff;}
+    .token-no {font-size:48px; font-weight:bold; color:#dc3545; margin:10px 0;}
+      @keyframes fadeIn {from {opacity:0;} to {opacity:1;}}
     </style>
 </head>
 <body>
@@ -26,13 +25,33 @@
     <form method="post">
 
         <label>Select Hospital:</label>
-        <select name="hospital" required>
+        <select name="hospital" id="hospital" required>
             <option value="">-- Hospital Chuno --</option>
 
-            <!-- Mumbai 10 -->
-            <option value="JJ Hospital Mumbai">JJ Hospital Mumbai</option>
+            <!-- TERE 22 HOSPITAL - Kuch me OPD number hai -->
+            <option value="Sir J.J. Hospital Mumbai">Sir J.J. Hospital Mumbai</option>
             <option value="KEM Hospital Mumbai">KEM Hospital Mumbai</option>
-            <option value="Sion Hospital Mumbai">Sion Hospital Mumbai</option>
+            <option value="Lokmanya Tilak Municipal Hospital (Sion Hospital)">Sion Hospital</option>
+            <option value="GT Hospital Mumbai">GT Hospital Mumbai</option>
+            <option value="St George Hospital Mumbai">St George Hospital Mumbai</option>
+            <option value="Thane Civil Hospital">Thane Civil Hospital</option>
+            <option value="Vashi Civil Hospital">Vashi Civil Hospital</option>
+            <option value="NMMC Hospital Nerul">NMMC Hospital Nerul</option>
+            <option value="Kalwa Hospital Thane">Kalwa Hospital Thane</option>
+            <option value="Sassoon General Hospital Pune">Sassoon General Hospital Pune</option>
+            <option value="Naidu Hospital Pune">Naidu Hospital Pune</option>
+            <option value="BJ Government Medical College Pune">BJ Govt Medical College Pune</option>
+            <option value="Government Medical College and Hospital Nagpur (GMCH)">GMCH Nagpur</option>
+            <option value="Indira Gandhi Government Medical College Nagpur">IGGMCH Nagpur</option>
+            <option value="Government Medical College and Hospital Aurangabad">GMCH Aurangabad</option>
+            <option value="District Civil Hospital Nashik">Civil Hospital Nashik</option>
+            <option value="Dr. Vasantrao Pawar Medical College Hospital Nashik">Vasantrao Pawar Hospital Nashik</option>
+            <option value="District Civil Hospital Solapur">Civil Hospital Solapur</option>
+            <option value="District Civil Hospital Amravati">Civil Hospital Amravati</option>
+            <option value="District Civil Hospital Kolhapur">Civil Hospital Kolhapur</option>
+            <option value="District Civil Hospital Jalgaon">Civil Hospital Jalgaon</option>
+
+            <!-- EXTRA 28 HOSPITAL - Sab General Department -->
             <option value="Nair Hospital Mumbai">Nair Hospital Mumbai</option>
             <option value="Cooper Hospital Mumbai">Cooper Hospital Mumbai</option>
             <option value="Baba Hospital Mumbai">Baba Hospital Mumbai</option>
@@ -40,92 +59,41 @@
             <option value="Shatabdi Hospital Mumbai">Shatabdi Hospital Mumbai</option>
             <option value="Bhabha Hospital Mumbai">Bhabha Hospital Mumbai</option>
             <option value="Dr RN Cooper Hospital Mumbai">Dr RN Cooper Hospital Mumbai</option>
-
-            <!-- Pune 4 -->
-            <option value="Sasoon Hospital Pune">Sasoon Hospital Pune</option>
             <option value="Civil Hospital Pune">Civil Hospital Pune</option>
             <option value="Aundh Hospital Pune">Aundh Hospital Pune</option>
             <option value="KEM Hospital Pune">KEM Hospital Pune</option>
-
-            <!-- Nagpur 3 -->
-            <option value="GMCH Nagpur">GMCH Nagpur</option>
-            <option value="Indira Gandhi Hospital Nagpur">Indira Gandhi Hospital Nagpur</option>
             <option value="MAHAN Trust Hospital Nagpur">MAHAN Trust Hospital Nagpur</option>
-
-            <!-- Nashik 2 -->
-            <option value="Civil Hospital Nashik">Civil Hospital Nashik</option>
             <option value="Bhabha Hospital Nashik">Bhabha Hospital Nashik</option>
-
-            <!-- Aurangabad 2 -->
-            <option value="GMCH Aurangabad">GMCH Aurangabad</option>
             <option value="Ghati Hospital Aurangabad">Ghati Hospital Aurangabad</option>
-
-            <!-- Solapur 2 -->
             <option value="Irrwin Hospital Solapur">Irrwin Hospital Solapur</option>
-            <option value="Civil Hospital Solapur">Civil Hospital Solapur</option>
-
-            <!-- Kolhapur 2 -->
+            <option value="Civil Hospital Solapur">Civil Hospital Solapur 2</option>
             <option value="CPR Hospital Kolhapur">CPR Hospital Kolhapur</option>
-            <option value="District Hospital Kolhapur">District Hospital Kolhapur</option>
-
-            <!-- Single District Hospitals 25 -->
+            <option value="District Hospital Kolhapur">District Hospital Kolhapur 2</option>
             <option value="Civil Hospital Sangli">Civil Hospital Sangli</option>
             <option value="Civil Hospital Satara">Civil Hospital Satara</option>
             <option value="Civil Hospital Ahmednagar">Civil Hospital Ahmednagar</option>
             <option value="Civil Hospital Dhule">Civil Hospital Dhule</option>
-            <option value="Civil Hospital Jalgaon">Civil Hospital Jalgaon</option>
             <option value="IMCH Amravati">IMCH Amravati</option>
-            <option value="District Hospital Amravati">District Hospital Amravati</option>
+            <option value="District Hospital Amravati">District Hospital Amravati 2</option>
             <option value="District Hospital Akola">District Hospital Akola</option>
             <option value="District Hospital Latur">District Hospital Latur</option>
             <option value="District Hospital Osmanabad">District Hospital Osmanabad</option>
             <option value="District Hospital Beed">District Hospital Beed</option>
             <option value="Dr Shankarrao Hospital Nanded">Dr Shankarrao Hospital Nanded</option>
-            <option value="District Hospital Parbhani">District Hospital Parbhani</option>
-            <option value="District Hospital Hingoli">District Hospital Hingoli</option>
-            <option value="District Hospital Ratnagiri">District Hospital Ratnagiri</option>
-            <option value="District Hospital Sindhudurg">District Hospital Sindhudurg</option>
-            <option value="District Hospital Raigad">District Hospital Raigad</option>
-            <option value="Thane Civil Hospital">Thane Civil Hospital</option>
-            <option value="District Hospital Palghar">District Hospital Palghar</option>
-            <option value="District Hospital Gondia">District Hospital Gondia</option>
-            <option value="District Hospital Bhandara">District Hospital Bhandara</option>
-            <option value="District Hospital Wardha">District Hospital Wardha</option>
-            <option value="District Hospital Yavatmal">District Hospital Yavatmal</option>
-            <option value="District Hospital Washim">District Hospital Washim</option>
-            <option value="District Hospital Buldhana">District Hospital Buldhana</option>
-            <option value="District Hospital Jalna">District Hospital Jalna</option>
         </select>
 
         <label>Select Bimari / Disease:</label>
-        <select name="disease" id="disease" required>
-            <option value="">-- Bimari Chuno --</option>
-            <option value="Fever / Sardi Khasi / Viral">Fever / Sardi Khasi / Viral</option>
-            <option value="Heart / BP / Chest Pain">Heart / BP / Chest Pain</option>
-            <option value="Skin / Allergy / Khujli">Skin / Allergy / Khujli</option>
-            <option value="Ortho / Haddi / Fracture">Ortho / Haddi / Fracture</option>
-            <option value="Gynecology / Pregnancy">Gynecology / Pregnancy</option>
-            <option value="Eye / Aankh">Eye / Aankh</option>
-            <option value="ENT / Kaan Naak Gala">ENT / Kaan Naak Gala</option>
-            <option value="Pediatric / Bacche">Pediatric / Bacche</option>
-            <option value="Dental / Daant">Dental / Daant</option>
-            <option value="Surgery / Operation">Surgery / Operation</option>
+        <select name="disease" id="disease" required disabled>
+            <option value="">-- Pehle Hospital Chuno --</option>
         </select>
 
-        <label>OPD / Doctor Room:</label>
-        <select name="opd" id="opd" required>
-            <option value="">-- Pehle Bimari Chuno --</option>
-            <option value="OPD 101 - General Medicine" data-disease="Fever / Sardi Khasi / Viral">OPD 101 - General Medicine</option>
-            <option value="OPD 201 - Cardiology" data-disease="Heart / BP / Chest Pain">OPD 201 - Cardiology</option>
-            <option value="OPD 301 - Dermatology" data-disease="Skin / Allergy / Khujli">OPD 301 - Dermatology</option>
-            <option value="OPD 401 - Orthopedics" data-disease="Ortho / Haddi / Fracture">OPD 401 - Orthopedics</option>
-            <option value="OPD 501 - Gynecology" data-disease="Gynecology / Pregnancy">OPD 501 - Gynecology</option>
-            <option value="OPD 601 - Ophthalmology" data-disease="Eye / Aankh">OPD 601 - Ophthalmology</option>
-            <option value="OPD 701 - ENT" data-disease="ENT / Kaan Naak Gala">OPD 701 - ENT</option>
-            <option value="OPD 801 - Pediatrics" data-disease="Pediatric / Bacche">OPD 801 - Pediatrics</option>
-            <option value="OPD 901 - Dental" data-disease="Dental / Daant">OPD 901 - Dental</option>
-            <option value="OPD 1001 - Surgery" data-disease="Surgery / Operation">OPD 1001 - Surgery</option>
-        </select>
+        <div id="opdBox" class="opd-box">
+            <div>👉 <b>Aapko jana hai:</b></div>
+            <div class="opd-text" id="opdText"></div>
+        </div>
+
+        <input type="hidden" name="opd" id="opdHidden">
+        <input type="hidden" name="disease" id="diseaseHidden">
 
         <label>Patient Name:</label>
         <input type="text" name="patient_name" required placeholder="Pura naam likhe">
@@ -139,21 +107,151 @@
     </form>
 
     <script>
-    // Bimari select karte hi OPD auto select
-    document.getElementById('disease').addEventListener('change', function() {
-        var disease = this.value;
-        var opdSelect = document.getElementById('opd');
+    // 50 Hospital x 5 Bimari = 250 mapping
+    const opdMap = {
+        // TERE 22 HOSPITAL
+        "Sir J.J. Hospital Mumbai": {
+            "Fever / Sardi Khasi": "OPD 15 - General Medicine",
+            "Heart / BP": "OPD 22 - Cardiology",
+            "Skin / Allergy": "OPD 8 - Dermatology",
+            "Ortho / Haddi": "OPD 31 - Orthopedics",
+            "Gynecology": "OPD 44 - Gynecology"
+        },
+        "KEM Hospital Mumbai": {
+            "Fever / Sardi Khasi": "OPD 12 - General Medicine",
+            "Heart / BP": "OPD 18 - Cardiology",
+            "Skin / Allergy": "OPD 6 - Dermatology",
+            "Ortho / Haddi": "OPD 27 - Orthopedics",
+            "Gynecology": "OPD 40 - Gynecology"
+        },
+        "Lokmanya Tilak Municipal Hospital (Sion Hospital)": {
+            "Fever / Sardi Khasi": "OPD 10 - General Medicine",
+            "Heart / BP": "OPD 16 - Cardiology",
+            "Skin / Allergy": "OPD 5 - Dermatology",
+            "Ortho / Haddi": "OPD 24 - Orthopedics",
+            "Gynecology": "OPD 35 - Gynecology"
+        },
+        "GT Hospital Mumbai": {
+            "Fever / Sardi Khasi": "OPD 11 - General Medicine",
+            "Heart / BP": "Cardiology Department",
+            "Skin / Allergy": "Dermatology Department",
+            "Ortho / Haddi": "Orthopedics Department",
+            "Gynecology": "Gynecology Department"
+        },
+        "St George Hospital Mumbai": {
+            "Fever / Sardi Khasi": "OPD 9 - General Medicine",
+            "Heart / BP": "OPD 14 - Cardiology",
+            "Skin / Allergy": "OPD 6 - Dermatology",
+            "Ortho / Haddi": "OPD 18 - Orthopedics",
+            "Gynecology": "OPD 25 - Gynecology"
+        },
+        "Thane Civil Hospital": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Vashi Civil Hospital": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "NMMC Hospital Nerul": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Kalwa Hospital Thane": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Sassoon General Hospital Pune": {
+            "Fever / Sardi Khasi": "OPD 5 - General Medicine",
+            "Heart / BP": "OPD 11 - Cardiology",
+            "Skin / Allergy": "OPD 3 - Dermatology",
+            "Ortho / Haddi": "OPD 19 - Orthopedics",
+            "Gynecology": "OPD 33 - Gynecology"
+        },
+        "Naidu Hospital Pune": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "BJ Government Medical College Pune": {
+            "Fever / Sardi Khasi": "OPD 1 - General Medicine",
+            "Heart / BP": "Cardiology Department",
+            "Skin / Allergy": "Dermatology Department",
+            "Ortho / Haddi": "Orthopedics Department",
+            "Gynecology": "Gynecology Department"
+        },
+        "Government Medical College and Hospital Nagpur (GMCH)": {
+            "Fever / Sardi Khasi": "OPD 101 - General Medicine",
+            "Heart / BP": "OPD 201 - Cardiology",
+            "Skin / Allergy": "OPD 301 - Dermatology",
+            "Ortho / Haddi": "OPD 401 - Orthopedics",
+            "Gynecology": "OPD 501 - Gynecology"
+        },
+        "Indira Gandhi Government Medical College Nagpur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Government Medical College and Hospital Aurangabad": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Civil Hospital Nashik": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Dr. Vasantrao Pawar Medical College Hospital Nashik": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Civil Hospital Solapur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Civil Hospital Amravati": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Civil Hospital Kolhapur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Civil Hospital Jalgaon": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
 
-        for(var i=0; i<opdSelect.options.length; i++) {
-            opdSelect.options[i].style.display = 'none';
+        // EXTRA 28 HOSPITAL - Sab General Department
+        "Nair Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Cooper Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Baba Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Rajawadi Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Shatabdi Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Bhabha Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Dr RN Cooper Hospital Mumbai": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Pune": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Aundh Hospital Pune": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "KEM Hospital Pune": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "MAHAN Trust Hospital Nagpur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Bhabha Hospital Nashik": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Ghati Hospital Aurangabad": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Irrwin Hospital Solapur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Solapur 2": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "CPR Hospital Kolhapur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Kolhapur 2": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Sangli": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Satara": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Ahmednagar": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Civil Hospital Dhule": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "IMCH Amravati": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Amravati 2": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Akola": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Latur": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Osmanabad": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "District Hospital Beed": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"},
+        "Dr Shankarrao Hospital Nanded": {"Fever / Sardi Khasi": "General Medicine Department", "Heart / BP": "Cardiology Department", "Skin / Allergy": "Dermatology Department", "Ortho / Haddi": "Orthopedics Department", "Gynecology": "Gynecology Department"}
+    };
+
+    const diseases = ["Fever / Sardi Khasi", "Heart / BP", "Skin / Allergy", "Ortho / Haddi", "Gynecology"];
+
+    document.getElementById('hospital').addEventListener('change', function() {
+        var hospital = this.value;
+        var diseaseSelect = document.getElementById('disease');
+        var opdBox = document.getElementById('opdBox');
+
+        diseaseSelect.innerHTML = '<option value="">-- Bimari Chuno --</option>';
+        opdBox.style.display = 'none';
+
+        if(hospital && opdMap[hospital]) {
+            diseaseSelect.disabled = false;
+            diseases.forEach(function(d) {
+                var opt = document.createElement('option');
+                opt.value = d;
+                opt.innerText = d;
+                diseaseSelect.appendChild(opt);
+            });
+        } else {
+            diseaseSelect.disabled = true;
+            diseaseSelect.innerHTML = '<option value="">-- Pehle Hospital Chuno --</option>';
         }
-        opdSelect.options[0].style.display = 'block';
+    });
 
-        for(var i=1; i<opdSelect.options.length; i++) {
-            if(opdSelect.options[i].getAttribute('data-disease') == disease) {
-                opdSelect.options[i].style.display = 'block';
-                opdSelect.value = opdSelect.options[i].value;
-            }
+    document.getElementById('disease').addEventListener('change', function() {
+        var hospital = document.getElementById('hospital').value;
+        var disease = this.value;
+        var opdBox = document.getElementById('opdBox');
+        var opdText = document.getElementById('opdText');
+        var opdHidden = document.getElementById('opdHidden');
+        var diseaseHidden = document.getElementById('diseaseHidden');
+
+        if(hospital && disease && opdMap[hospital][disease]) {
+            var opd = opdMap[hospital][disease];
+            opdText.innerText = opd;
+            opdHidden.value = opd;
+            diseaseHidden.value = disease;
+            opdBox.style.display = 'block';
+        } else {
+            opdBox.style.display = 'none';
+            opdHidden.value = '';
         }
     });
     </script>
@@ -162,17 +260,16 @@
     <div class="token-slip">
         <div style="font-size:14px; color:#666;">Token Number</div>
         <div class="token-no">#{{patient.id}}</div>
-        <div class="name">{{patient.patient_name}}</div>
+        <div style="font-size:20px; font-weight:bold; margin:5px 0;">{{patient.patient_name}}</div>
         <div style="font-size:18px; color:#007bff; font-weight:bold; margin:8px 0;">{{patient.hospital}}</div>
-        <div style="font-size:16px; margin:5px 0;">{{patient.opd}}</div>
+
+        <div style="font-size:20px; margin:15px 0; padding:15px; background:#fff3cd; border-radius:8px; border:2px solid #ffc107;">
+            🏥 <b>Jana hai:</b><br>
+            <span style="font-size:22px; color:#856404;">{{patient.opd}}</span>
+        </div>
+
         <div style="font-size:16px; margin:5px 0;"><b>Bimari:</b> {{patient.disease}}</div>
         <div style="font-size:16px; margin:10px 0;">Fee: ₹{{patient.amount}}</div>
-
-        <div class="upi">
-            <div style="font-weight:bold; margin-bottom:8px;">📱 UPI Payment</div>
-            <div class="upi-id">hospital@upi</div>
-            <div style="font-size:13px; margin-top:5px;">Scan & Pay ₹30</div>
-        </div>
 
         <form method="post" action="/checkin/{{patient.id}}">
             <button type="submit" style="background:#007bff;">🏥 Hospital Pahuch Gaya - Check In</button>
