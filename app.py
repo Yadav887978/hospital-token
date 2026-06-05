@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import qrcode
 from io import BytesIO
-import os
+import os, base64
 
 app = Flask(__name__)
 app.secret_key = 'hospital_secret_key_123'
@@ -19,23 +19,47 @@ db = SQLAlchemy(app)
 class Patient(db.Model):
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
-    hospital = db.Column(db.String(100), nullable=False)
+    hospital = db.Column(db.String(150), nullable=False)
     opd = db.Column(db.String(50), nullable=False)
     disease = db.Column(db.String(100), nullable=False)
     patient_name = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(200), nullable=False)
-    payment = db.Column(db.String(20), nullable=False)
     amount = db.Column(db.Integer, default=0)
+    upi_id = db.Column(db.String(100), default='8879789073-2@ybl')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 with app.app_context():
     db.create_all()
 
-# Yaha apna data change kar lena
-HOSPITAL_LIST = ['ABC Hospital', 'XYZ Hospital', 'City Care Hospital']
-OPD_LIST = ['OPD 101 - General', 'OPD 102 - Ortho', 'OPD 103 - ENT', 'OPD 104 - Skin', 'OPD 105 - Dental']
-DISEASE_LIST = ['Fever', 'Cough & Cold', 'Body Pain', 'Stomach Pain', 'Skin Problem', 'Ear Pain', 'Tooth Pain', 'Other']
-PAYMENT_LIST = ['Cash', 'UPI/PhonePe', 'Card', 'Free/PMJAY']
+HOSPITAL_LIST = [
+    'JJ Hospital, Mumbai',
+    'KEM Hospital, Mumbai',
+    'Sion Hospital, Mumbai',
+    'Nair Hospital, Mumbai',
+    'B.J. Medical College, Pune',
+    'Sassoon Hospital, Pune',
+    'Civil Hospital, Nagpur',
+    'Civil Hospital, Thane',
+    'GMCH, Aurangabad',
+    'Civil Hospital, Nashik'
+]
+
+OPD_LIST = [
+    'OPD 101 - General Medicine',
+    'OPD 102 - Orthopedics',
+    'OPD 103 - ENT',
+    'OPD 104 - Skin & VD',
+    'OPD 105 - Dental',
+    'OPD 106 - Eye',
+    'OPD 107 - Pediatrics',
+    'OPD 108 - Gynecology'
+]
+
+DISEASE_LIST = ['Fever', 'Cough & Cold', 'Body Pain', 'Stomach Pain', 'Skin Problem', 'Eye Problem', 'Tooth Pain', 'BP/Sugar Check', 'Other']
+
+# TERA UPI ID
+UPI_ID = '8879789073-2@ybl'
+HOSPITAL_NAME = 'Hospital Token'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -45,26 +69,34 @@ def index():
         disease = request.form.get('disease')
         patient_name = request.form.get('patient_name')
         address = request.form.get('address')
-        payment = request.form.get('payment')
         amount = request.form.get('amount') or 0
 
-        if hospital and opd and disease and patient_name and address and payment:
-            new_patient = Patient(hospital=hospital, opd=opd, disease=disease, 
-                                patient_name=patient_name, address=address, 
-                                payment=payment, amount=amount)
+        if hospital and opd and disease and patient_name and address and amount:
+            new_patient = Patient(hospital=hospital, opd=opd, disease=disease,
+                                patient_name=patient_name, address=address,
+                                amount=amount, upi_id=UPI_ID)
             db.session.add(new_patient)
             db.session.commit()
-            flash(f'Token #{new_patient.id} ready! {hospital} - {opd} me jao', 'success')
+            flash(f'Token #{new_patient.id} ready! ₹{amount} UPI pay karke slip dikhao', 'success')
         else:
-            flash('Sab details bharo bhai', 'error')
+            flash('Sab details bharo + Amount dalo bhai', 'error')
         return redirect(url_for('index'))
 
     patients = Patient.query.order_by(Patient.id.desc()).all()
-    return render_template('index.html', patients=patients, 
-                         hospital_list=HOSPITAL_LIST, 
-                         opd_list=OPD_LIST, 
+
+    # UPI Scanner QR code
+    upi_link = f"upi://pay?pa={UPI_ID}&pn={HOSPITAL_NAME}&am=&cu=INR"
+    qr = qrcode.make(upi_link)
+    img_io = BytesIO()
+    qr.save(img_io, 'PNG')
+    img_io.seek(0)
+    qr_base64 = base64.b64encode(img_io.getvalue()).decode()
+
+    return render_template('index.html', patients=patients,
+                         hospital_list=HOSPITAL_LIST,
+                         opd_list=OPD_LIST,
                          disease_list=DISEASE_LIST,
-                         payment_list=PAYMENT_LIST)
+                         upi_id=UPI_ID, qr_code=qr_base64)
 
 @app.route('/qr')
 def qr_code():
