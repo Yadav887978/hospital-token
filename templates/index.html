@@ -2,27 +2,30 @@
 <html>
 <head>
     <title>Hospital UPI Payment Token</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {font-family: Arial; max-width: 900px; margin: 30px auto; padding: 20px; background: #e8f4f8;}
-      .box {background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);}
+    .box {background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);}
         input, select {padding: 12px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 2px solid #ddd; border-radius: 6px; font-size: 15px;}
-        button {padding: 15px 20px; background: #6f42c1; color: white; border: none; cursor: pointer; width: 100%; font-size: 17px; border-radius: 6px; font-weight: bold;}
+        button {padding: 15px 20px; background: #6f42c1; color: white; border: none; cursor: pointer; width: 100%; font-size: 17px; border-radius: 6px; font-weight: bold; margin-top: 10px;}
         button:hover {background: #5a32a3;}
-      .patient {border-left: 5px solid #0d6efd; background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 6px;}
-      .token {font-size: 22px; font-weight: bold; color: #dc3545;}
-      .flash {background: #d1e7dd; color: #0f5132; padding: 12px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #198754;}
-      .upi-box {background: #fff3cd; border: 3px dashed #ff9800; padding: 25px; text-align: center; border-radius: 10px; margin: 20px 0;}
-      .upi-box img {max-width: 220px; margin: 15px auto; border: 5px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);}
-      .upi-id {font-size: 18px; font-weight: bold; color: #d32f2f; background: white; padding: 10px; border-radius: 5px; display: inline-block; margin: 10px 0;}
+    .patient {border-left: 5px solid #0d6efd; background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 14px;}
+    .token {font-size: 22px; font-weight: bold; color: #dc3545;}
+    .flash {background: #d1e7dd; color: #0f5132; padding: 12px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #198754;}
+    .upi-box {background: #fff3cd; border: 3px dashed #ff9800; padding: 25px; text-align: center; border-radius: 10px; margin: 20px 0;}
+    .upi-box img {max-width: 220px; margin: 15px auto; border: 5px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);}
+    .upi-id {font-size: 18px; font-weight: bold; color: #d32f2f; background: white; padding: 10px; border-radius: 5px; display: inline-block; margin: 10px 0;}
+    .upi-btn {display:inline-block; padding:15px 30px; background:#5f259f; color:white; text-decoration:none; border-radius:8px; font-size:18px; font-weight:bold; margin-top:10px;}
+    .upi-btn:active {background:#4a1d7a;}
         h2 {color: #6f42c1; text-align: center; margin: 0 0 20px 0;}
         label {font-weight: bold; margin-top: 12px; display: block; color: #333;}
-      .row {display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
+    .row {display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
         @media(max-width: 700px) {.row {grid-template-columns: 1fr;}}
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>🏥 Hospital Token + UPI Payment Scanner</h2>
+        <h2>🏥 Maharashtra Govt Hospital - OPD Token</h2>
 
         {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -30,7 +33,7 @@
           {% endif %}
         {% endwith %}
 
-        <form method="POST">
+        <form method="POST" id="tokenForm">
             <label>Hospital Select karo:</label>
             <select name="hospital" required>
                 <option value="">-- Hospital Chuno --</option>
@@ -72,14 +75,19 @@
             </div>
 
             <label>Payment Amount ₹:</label>
-            <input type="number" name="amount" placeholder="200" value="200" required>
+            <input type="number" name="amount" id="amount" placeholder="200" value="200" required>
 
             <div class="upi-box">
-                <h3 style="margin:0; color:#e65100;">📱 UPI Scanner - Pay Now</h3>
+                <h3 style="margin:0; color:#e65100;">📱 UPI Payment karo</h3>
                 <div class="upi-id">UPI ID: {{ upi_id }}</div><br>
                 <img src="data:image/png;base64,{{ qr_code }}" alt="UPI QR Scanner"><br>
-                <b>PhonePe / GPay / Paytm se scan karke payment karo</b><br>
-                <small>Payment hone ke baad "Token Generate" dabao</small>
+
+                <a id="upiBtn" href="#" class="upi-btn">Pay ₹<span id="payAmount">200</span> via UPI</a><br>
+
+                <small style="color:#555; margin-top:10px; display:block;">
+                    Mobile se "Pay via UPI" dabao ya QR scan karo<br>
+                    Payment ke baad wapas aa ke Token Generate dabao
+                </small>
             </div>
 
             <button type="submit">🎟️ Payment karke Token Generate karo</button>
@@ -102,5 +110,22 @@
     </div>
 
     <center><a href="/qr" target="_blank" style="color: #6f42c1; font-weight: bold; font-size:18px;">📱 Token Page QR Download</a></center>
+
+<script>
+document.getElementById('amount').oninput = function() {
+    document.getElementById('payAmount').innerText = this.value;
+}
+
+document.getElementById('upiBtn').onclick = function() {
+    var amount = document.getElementById('amount').value;
+    if(amount == "" || amount == "0") {
+        alert("Pehle Amount dalo bhai");
+        return false;
+    }
+    var upiLink = "upi://pay?pa={{ upi_id }}&pn=Hospital+Token&am=" + amount + "&cu=INR&tn=OPD+Token";
+    window.location.href = upiLink;
+    return false;
+}
+</script>
 </body>
 </html>
