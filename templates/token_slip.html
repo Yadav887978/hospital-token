@@ -1,26 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-<title>Token Slip</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{background:#f0f8ff;padding:20px;font-family:Arial}
-.slip{background:white;border:3px dashed #007bff;padding:25px;max-width:350px;margin:auto;text-align:center}
-h1{color:#007bff;font-size:24px;margin:5px}
-h2{font-size:20px;margin:8px}
-.big{font-size:45px;color:red;font-weight:bold;margin:10px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Slip - {{ hospital.name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: #f0f2f5; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slip { 
+            background: white; 
+            border: 3px dashed #333; 
+            padding: 25px; 
+            max-width: 380px; 
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+        .header h2 { color: #2c3e50; font-size: 22px; }
+        .header p { font-size: 12px; color: #555; margin-top: 5px; }
+        
+        .token-no { 
+            font-size: 60px; 
+            font-weight: bold; 
+            color: #e74c3c; 
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 5px;
+        }
+        
+        .type { 
+            font-size: 18px; 
+            padding: 8px 20px; 
+            border-radius: 25px; 
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .emergency { background: #e74c3c; color: white; }
+        .normal { background: #27ae60; color: white; }
+        
+        .details { 
+            text-align: left; 
+            margin: 20px 0; 
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .details b { color: #2c3e50; }
+        
+        .qr { 
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .footer { 
+            text-align: center; 
+            font-size: 12px; 
+            color: gray; 
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+        
+        .print-btn { 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            padding: 14px 40px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            border-radius: 8px; 
+            margin-top: 20px;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .print-btn:hover { background: #2980b9; }
+        
+        @media print { 
+            .print-btn { display: none; } 
+            body { background: white; padding: 0; }
+            .slip { box-shadow: none; border: 2px solid #000; }
+        }
+    </style>
 </head>
 <body>
-<div class="slip">
-<h1>{{hospital.name}}</h1>
-<p>{{hospital.city}} Municipal Hospital</p>
-<hr>
-<h2>{{opd.opd_code}} - {{opd.opd_name}}</h2>
-<p>Token Type: {{token.token_type}}</p>
-<div class="big">{{token.token_type[0]}}-{{token.token_no}}</div>
-<div style="margin:15px 0;border:2px solid #007bff;padding:10px;border-radius:10px;text-align:center">
-<img src="data:image/png;base64,{{qr_code}}" width="160" height="160">
-<p style="font-size:16px;margin:5px"><b>Scan & Pay: ₹{{amount}}</b></p>
-<p style="font-size:10px;color:gray">UPI: 8879789073-2@ybl</p>
-</div>
+    <div class="slip">
+        <div class="header">
+            <h2>{{ hospital.name }}</h2>
+            <p>{{ hospital.address }}, {{ hospital.city }}</p>
+        </div>
+        
+        <h3 style="text-align: center; color: #34495e;">OPD: {{ opd.name }}</h3>
+        <p style="text-align: center; font-size: 13px; color: #555;">
+            Doctor: {{ opd.doctor_name }} | Time: {{ opd.timing }}
+        </p>
+        
+        <hr style="margin: 15px 0;">
+        
+        <div class="token-no">{{ token.token_no }}</div>
+        <div class="type {{ token.token_type|lower }}">{{ token.token_type }} TOKEN</div>
+        
+        <div class="details">
+            <p><b>Patient Name:</b> {{ token.patient_name }}</p>
+            <p><b>Age:</b> {{ token.patient_age }} years</p>
+            <p><b>Fees Paid:</b> ₹{{ token.fees }}</p>
+            <p><b>Date & Time:</b> {{ token.created_at.strftime('%d/%m/%Y %I:%M %p') }}</p>
+            <p><b>Status:</b> {{ token.status }}</p>
+        </div>
+        
+        <div class="qr">
+            <img src="data:image/png;base64,{{ qr_img }}" width="160" height="160">
+        </div>
+        
+        <div class="footer">
+            <p><b>Scan QR Code for token details</b></p>
+            <p style="margin-top: 8px;">Keep this slip safe! Counter pe dikhana zaroori hai.</p>
+        </div>
+    </div>
+    
+    <button class="print-btn" onclick="window.print()">🖨️ Print Token Slip</button>
+</body>
+</html>
