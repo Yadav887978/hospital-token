@@ -1,37 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hospital Token</title>
+    <title>Hospital Token System</title>
     <style>
-        body {font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px;}
-        input {padding: 10px; margin: 5px; width: 100%;}
-        button {padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer;}
-       .patient {border: 1px solid #ddd; padding: 10px; margin: 5px 0;}
-       .flash {background: #d4edda; padding: 10px; margin: 10px 0;}
+        body {font-family: Arial; max-width: 700px; margin: 30px auto; padding: 20px; background: #f5f5f5;}
+       .box {background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;}
+        input {padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box;}
+        button {padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; width: 100%; font-size: 16px;}
+       .patient {border-left: 4px solid #007bff; background: white; padding: 12px; margin: 8px 0;}
+       .token {font-size: 20px; font-weight: bold; color: #dc3545;}
+       .flash {background: #d4edda; padding: 10px; margin: 10px 0; border-radius: 5px;}
+        h2 {color: #007bff; text-align: center;}
     </style>
 </head>
 <body>
-    <h2>🏥 Hospital Token System</h2>
-    
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash">{{ messages[0] }}</div>
-      {% endif %}
-    {% endwith %}
+    <div class="box">
+        <h2>🏥 OPD Token System</h2>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash">{{ messages[0] }}</div>
+          {% endif %}
+        {% endwith %}
 
-    <form method="POST">
-        <input type="text" name="name" placeholder="Patient ka naam" required>
-        <input type="text" name="address" placeholder="Address" required>
-        <button type="submit">Add Patient</button>
-    </form>
+        <form method="POST">
+            <input type="text" name="opd" placeholder="OPD No / Department" required>
+            <input type="text" name="hospital_name" placeholder="Hospital ka naam" required>
+            <input type="text" name="patient_name" placeholder="Patient ka naam" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <button type="submit">Token Generate karo</button>
+        </form>
+    </div>
 
-    <h3>Patient List:</h3>
-    {% for p in patients %}
-        <div class="patient">
-            <b>#{{ p.id }}</b> {{ p.name }} - {{ p.hospital_address }}
-        </div>
-    {% endfor %}
+    <div class="box">
+        <h3>📋 Patient List:</h3>
+        {% for p in patients %}
+            <div class="patient">
+                <span class="token">Token #{{ p.id }}</span> | 
+                <b>OPD:</b> {{ p.opd }} | 
+                <b>Hospital:</b> {{ p.hospital_name }} | 
+                <b>Patient:</b> {{ p.patient_name }} | 
+                <b>Address:</b> {{ p.address }}
+            </div>
+        {% endfor %}
+    </div>
 
-    <p><a href="/qr">QR Code</a></p>
+    <center><a href="/qr" target="_blank">📱 QR Code Download</a></center>
 </body>
 </html>
