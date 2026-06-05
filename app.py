@@ -58,7 +58,7 @@ def home():
         ])
         db.session.commit()
         hospitals = Hospital.query.all()
-    return render_template('index.html', hospitals=hospitals)
+    return render_template('dashboard.html', hospitals=hospitals)  # <-- dashboard.html set hai
 
 @app.route('/book_token/<int:hospital_id>')
 def book_token(hospital_id):
