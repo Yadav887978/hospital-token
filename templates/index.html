@@ -1,50 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hospital Token System</title>
+    <title>Hospital Token + Payment System</title>
     <style>
-        body {font-family: Arial; max-width: 700px; margin: 30px auto; padding: 20px; background: #f5f5f5;}
-       .box {background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;}
-        input {padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box;}
-        button {padding: 12px 20px; background: #28a745; color: white; border: none; cursor: pointer; width: 100%; font-size: 16px;}
-       .patient {border-left: 4px solid #007bff; background: white; padding: 12px; margin: 8px 0;}
-       .token {font-size: 20px; font-weight: bold; color: #dc3545;}
-       .flash {background: #d4edda; padding: 10px; margin: 10px 0; border-radius: 5px;}
-        h2 {color: #007bff; text-align: center;}
+        body {font-family: Arial; max-width: 850px; margin: 30px auto; padding: 20px; background: #e8f4f8;}
+       .box {background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);}
+        input, select {padding: 12px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 2px solid #ddd; border-radius: 6px; font-size: 15px;}
+        button {padding: 15px 20px; background: #007bff; color: white; border: none; cursor: pointer; width: 100%; font-size: 17px; border-radius: 6px; font-weight: bold;}
+        button:hover {background: #0056b3;}
+       .patient {border-left: 5px solid #28a745; background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 6px;}
+       .token {font-size: 24px; font-weight: bold; color: #dc3545;}
+       .flash {background: #d4edda; color: #155724; padding: 12px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #28a745;}
+       .flash.error {background: #f8d7da; color: #721c24; border-left-color: #dc3545;}
+        h2 {color: #007bff; text-align: center; margin: 0 0 20px 0;}
+        label {font-weight: bold; margin-top: 12px; display: block; color: #333;}
+       .row {display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
+        @media(max-width: 600px) {.row {grid-template-columns: 1fr;}}
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>🏥 OPD Token System</h2>
-        
-        {% with messages = get_flashed_messages() %}
+        <h2>🏥 Smart Hospital Token System</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            <div class="flash">{{ messages[0] }}</div>
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
           {% endif %}
         {% endwith %}
 
         <form method="POST">
-            <input type="text" name="opd" placeholder="OPD No / Department" required>
-            <input type="text" name="hospital_name" placeholder="Hospital ka naam" required>
-            <input type="text" name="patient_name" placeholder="Patient ka naam" required>
-            <input type="text" name="address" placeholder="Address" required>
-            <button type="submit">Token Generate karo</button>
+            <div class="row">
+                <div>
+                    <label>Hospital Select karo:</label>
+                    <select name="hospital" required>
+                        <option value="">-- Hospital Chuno --</option>
+                        {% for h in hospital_list %}
+                        <option value="{{ h }}">{{ h }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>OPD Department:</label>
+                    <select name="opd" required>
+                        <option value="">-- OPD Chuno --</option>
+                        {% for o in opd_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <label>Bimari / Disease:</label>
+            <select name="disease" required>
+                <option value="">-- Bimari Chuno --</option>
+                {% for d in disease_list %}
+                <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="row">
+                <div>
+                    <label>Patient ka naam:</label>
+                    <input type="text" name="patient_name" placeholder="Raj Kumar" required>
+                </div>
+                <div>
+                    <label>Address:</label>
+                    <input type="text" name="address" placeholder="Churchgate, Mumbai" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Payment Mode:</label>
+                    <select name="payment" required>
+                        <option value="">-- Payment Type --</option>
+                        {% for p in payment_list %}
+                        <option value="{{ p }}">{{ p }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Amount ₹:</label>
+                    <input type="number" name="amount" placeholder="200" value="0">
+                </div>
+            </div>
+
+            <button type="submit">🎟️ Token Generate + Payment Save</button>
         </form>
     </div>
 
     <div class="box">
-        <h3>📋 Patient List:</h3>
+        <h3>📋 Aaj ke Patient List:</h3>
         {% for p in patients %}
             <div class="patient">
-                <span class="token">Token #{{ p.id }}</span> | 
-                <b>OPD:</b> {{ p.opd }} | 
-                <b>Hospital:</b> {{ p.hospital_name }} | 
-                <b>Patient:</b> {{ p.patient_name }} | 
-                <b>Address:</b> {{ p.address }}
+                <span class="token">Token #{{ p.id }}</span>
+                | <b>{{ p.hospital }}</b>
+                | <b>{{ p.opd }}</b>
+                | <b>Bimari:</b> {{ p.disease }}
+                | <b>Patient:</b> {{ p.patient_name }}
+                | <b>Payment:</b> {{ p.payment }} {% if p.amount > 0 %}₹{{ p.amount }}{% endif %}
             </div>
+        {% else %}
+            <p style="text-align:center; color:gray;">Aaj koi patient nahi hai</p>
         {% endfor %}
     </div>
 
-    <center><a href="/qr" target="_blank">📱 QR Code Download</a></center>
+    <center><a href="/qr" target="_blank" style="color: #007bff; font-weight: bold; font-size:18px;">📱 QR Code Download</a></center>
 </body>
 </html>
