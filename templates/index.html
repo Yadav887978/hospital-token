@@ -1,131 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hospital UPI Payment Token</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Token System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {font-family: Arial; max-width: 900px; margin: 30px auto; padding: 20px; background: #e8f4f8;}
-    .box {background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);}
-        input, select {padding: 12px; margin: 8px 0; width: 100%; box-sizing: border-box; border: 2px solid #ddd; border-radius: 6px; font-size: 15px;}
-        button {padding: 15px 20px; background: #6f42c1; color: white; border: none; cursor: pointer; width: 100%; font-size: 17px; border-radius: 6px; font-weight: bold; margin-top: 10px;}
-        button:hover {background: #5a32a3;}
-    .patient {border-left: 5px solid #0d6efd; background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 14px;}
-    .token {font-size: 22px; font-weight: bold; color: #dc3545;}
-    .flash {background: #d1e7dd; color: #0f5132; padding: 12px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #198754;}
-    .upi-box {background: #fff3cd; border: 3px dashed #ff9800; padding: 25px; text-align: center; border-radius: 10px; margin: 20px 0;}
-    .upi-box img {max-width: 220px; margin: 15px auto; border: 5px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);}
-    .upi-id {font-size: 18px; font-weight: bold; color: #d32f2f; background: white; padding: 10px; border-radius: 5px; display: inline-block; margin: 10px 0;}
-    .upi-btn {display:inline-block; padding:15px 30px; background:#5f259f; color:white; text-decoration:none; border-radius:8px; font-size:18px; font-weight:bold; margin-top:10px;}
-    .upi-btn:active {background:#4a1d7a;}
-        h2 {color: #6f42c1; text-align: center; margin: 0 0 20px 0;}
-        label {font-weight: bold; margin-top: 12px; display: block; color: #333;}
-    .row {display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
-        @media(max-width: 700px) {.row {grid-template-columns: 1fr;}}
+        body{font-family:Arial;background:#f5f5f5;padding:20px;margin:0}
+        .container{max-width:500px;margin:auto;background:white;padding:25px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        h1{color:#007bff;text-align:center;margin-bottom:20px}
+        input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
+        button{background:#007bff;color:white;padding:14px;border:none;border-radius:8px;width:100%;font-size:16px;cursor:pointer;font-weight:bold}
+        button:hover{background:#0056b3}
+        .fee-box{background:#e7f3ff;padding:15px;border-radius:8px;margin:10px 0;text-align:center;font-size:18px;font-weight:bold;color:#0056b3}
+        .token-slip{background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:10px;margin-top:20px;text-align:center}
+        .token-no{font-size:40px;font-weight:bold;color:#28a745}
+        .qr-img{margin:15px 0}
+        .btn-checkin{background:#28a745;margin-top:10px}
+        .alert{padding:12px;border-radius:8px;margin-bottom:15px}
+        .alert-success{background:#d4edda;color:#155724}
+        .alert-error{background:#f8d7da;color:#721c24}
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>🏥 Maharashtra Govt Hospital - OPD Token</h2>
-
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="flash">{{ messages[0] }}</div>
-          {% endif %}
+    <div class="container">
+        <h1>🏥 Hospital Token</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{category}}">{{message}}</div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
-        <form method="POST" id="tokenForm">
-            <label>Hospital Select karo:</label>
+        {% if patient %}
+        <div class="token-slip">
+            <div>Token Number</div>
+            <div class="token-no">#{{patient.id}}</div>
+            <div><b>{{patient.patient_name}}</b></div>
+            <div>{{patient.opd}}</div>
+            <div>Fee: ₹{{patient.amount}}</div>
+            
+            {% if qr_code %}
+            <div class="qr-img">
+                <img src="data:image/png;base64,{{qr_code}}" width="200">
+            </div>
+            <a href="{{upi_link}}" style="text-decoration:none">
+                <button>Pay via UPI ₹30</button>
+            </a>
+            {% endif %}
+            
+            <a href="/checkin/{{patient.id}}" style="text-decoration:none">
+                <button class="btn-checkin">🏥 Hospital Pahuch Gaya - Check In</button>
+            </a>
+            <p style="font-size:12px;color:gray;margin-top:10px">Hospital pahuch ke Check-In dabana zaruri hai</p>
+        </div>
+        
+        {% else %}
+        <div class="fee-box">Consultation Fee: ₹30 Fixed</div>
+        
+        <form method="POST">
             <select name="hospital" required>
-                <option value="">-- Hospital Chuno --</option>
-                {% for h in hospital_list %}
-                <option value="{{ h }}">{{ h }}</option>
+                <option value="">Select Hospital</option>
+                {% for i in range(1,31) %}
+                <option value="Govt Hospital {{i}}">Govt Hospital {{i}}</option>
                 {% endfor %}
             </select>
-
-            <div class="row">
-                <div>
-                    <label>OPD Department:</label>
-                    <select name="opd" required>
-                        <option value="">-- OPD Chuno --</option>
-                        {% for o in opd_list %}
-                        <option value="{{ o }}">{{ o }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label>Bimari / Disease:</label>
-                    <select name="disease" required>
-                        <option value="">-- Bimari Chuno --</option>
-                        {% for d in disease_list %}
-                        <option value="{{ d }}">{{ d }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div>
-                    <label>Patient ka naam:</label>
-                    <input type="text" name="patient_name" placeholder="Raj Kumar" required>
-                </div>
-                <div>
-                    <label>Address:</label>
-                    <input type="text" name="address" placeholder="Gaon, Taluka, District" required>
-                </div>
-            </div>
-
-            <label>Payment Amount ₹:</label>
-            <input type="number" name="amount" id="amount" placeholder="200" value="200" required>
-
-            <div class="upi-box">
-                <h3 style="margin:0; color:#e65100;">📱 UPI Payment karo</h3>
-                <div class="upi-id">UPI ID: {{ upi_id }}</div><br>
-                <img src="data:image/png;base64,{{ qr_code }}" alt="UPI QR Scanner"><br>
-
-                <a id="upiBtn" href="#" class="upi-btn">Pay ₹<span id="payAmount">200</span> via UPI</a><br>
-
-                <small style="color:#555; margin-top:10px; display:block;">
-                    Mobile se "Pay via UPI" dabao ya QR scan karo<br>
-                    Payment ke baad wapas aa ke Token Generate dabao
-                </small>
-            </div>
-
-            <button type="submit">🎟️ Payment karke Token Generate karo</button>
+            
+            <select name="opd" required>
+                <option value="">Select OPD</option>
+                {% for i in range(1,13) %}
+                <option value="OPD {{100+i}} - Department {{i}}">OPD {{100+i}} - Department {{i}}</option>
+                {% endfor %}
+            </select>
+            
+            <input type="text" name="disease" placeholder="Bimari / Problem" required>
+            <input type="text" name="patient_name" placeholder="Patient ka Naam" required>
+            <textarea name="address" placeholder="Address" rows="3" required></textarea>
+            
+            <button type="submit">Token Generate Karo</button>
         </form>
+        {% endif %}
     </div>
-
-    <div class="box">
-        <h3>📋 Aaj ke Patient List:</h3>
-        {% for p in patients %}
-            <div class="patient">
-                <span class="token">Token #{{ p.id }}</span>
-                | <b>{{ p.hospital }}</b>
-                | <b>{{ p.opd }}</b>
-                | <b>Patient:</b> {{ p.patient_name }}
-                | <b>₹{{ p.amount }}</b> UPI Paid
-            </div>
-        {% else %}
-            <p style="text-align:center; color:gray;">Aaj koi patient nahi hai</p>
-        {% endfor %}
-    </div>
-
-    <center><a href="/qr" target="_blank" style="color: #6f42c1; font-weight: bold; font-size:18px;">📱 Token Page QR Download</a></center>
-
-<script>
-document.getElementById('amount').oninput = function() {
-    document.getElementById('payAmount').innerText = this.value;
-}
-
-document.getElementById('upiBtn').onclick = function() {
-    var amount = document.getElementById('amount').value;
-    if(amount == "" || amount == "0") {
-        alert("Pehle Amount dalo bhai");
-        return false;
-    }
-    var upiLink = "upi://pay?pa={{ upi_id }}&pn=Hospital+Token&am=" + amount + "&cu=INR&tn=OPD+Token";
-    window.location.href = upiLink;
-    return false;
-}
-</script>
 </body>
 </html>
