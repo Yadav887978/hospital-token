@@ -1,98 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Maharashtra Govt Hospital Token</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {font-family:Arial; background:#f0f2f5; margin:0; padding:20px;}
-.container {max-width:500px; margin:auto; background:white; padding:25px; border-radius:12px;}
-h2 {text-align:center; color:#007bff;}
-label {font-weight:bold; margin-top:15px; display:block;}
-input, select {width:100%; padding:12px; margin-top:5px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;}
-button {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-size:16px; margin-top:20px;}
-.token-slip {text-align:center; padding:25px; border:2px dashed #007bff; border-radius:12px; margin-top:20px; background:#e7f3ff;}
-.token-no {font-size:48px; font-weight:bold; color:#dc3545;}
-</style>
+    <title>Maharashtra Govt Hospital Token</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {font-family:Arial; background:#f0f2f5; margin:0; padding:20px;}
+       .container {max-width:500px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+        h2 {text-align:center; color:#007bff; margin-bottom:25px;}
+        label {font-weight:bold; margin-top:15px; display:block; color:#333;}
+        input, select {width:100%; padding:12px; margin-top:5px; border:1px solid #ddd; border-radius:8px; font-size:15px; box-sizing:border-box;}
+        button {width:100%; padding:14px; background:#28a745; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; margin-top:20px; cursor:pointer;}
+        button:hover {background:#218838;}
+       .token-slip {text-align:center; padding:25px; border:2px dashed #007bff; border-radius:12px; margin-top:20px; background:#e7f3ff;}
+       .token-no {font-size:48px; font-weight:bold; color:#dc3545; margin:10px 0;}
+       .name {font-size:20px; font-weight:bold; margin:5px 0;}
+       .upi {margin:15px 0; padding:15px; background:#fff3cd; border-radius:8px; border:1px solid #ffeeba;}
+       .upi-id {font-size:18px; font-weight:bold; color:#856404;}
+    </style>
 </head>
 <body>
 <div class="container">
-<h2>🏥 Maharashtra Govt Hospital Token</h2>
+    <h2>🏥 Maharashtra Govt Hospital Token</h2>
 
-{% if not patient %}
-<form method="post">
+    {% if not patient %}
+    <form method="post">
 
-<label>Select Hospital:</label>
-<select name="hospital" required>
-<option value="">-- Hospital Chuno --</option>
-<option value="JJ Hospital Mumbai">JJ Hospital Mumbai</option>
-<option value="KEM Hospital Mumbai">KEM Hospital Mumbai</option>
-<option value="Sion Hospital Mumbai">Sion Hospital Mumbai</option>
-<option value="Sasoon Hospital Pune">Sasoon Hospital Pune</option>
-<option value="GMCH Nagpur">GMCH Nagpur</option>
-<!-- Baaki 45 hospital bhi yahi daal de jo pichle msg me bheje the -->
-</select>
+        <label>Select Hospital:</label>
+        <select name="hospital" required>
+            <option value="">-- Hospital Chuno --</option>
 
-<label>Select Bimari / Disease:</label>
-<select name="disease" id="disease" required>
-<option value="">-- Bimari Chuno --</option>
-<option value="Fever / Sardi Khasi">Fever / Sardi Khasi</option>
-<option value="Heart / BP">Heart / BP</option>
-<option value="Skin / Allergy">Skin / Allergy</option>
-<option value="Ortho / Haddi">Ortho / Haddi</option>
-<option value="Gynecology">Gynecology</option>
-</select>
+            <!-- Mumbai 10 -->
+            <option value="JJ Hospital Mumbai">JJ Hospital Mumbai</option>
+            <option value="KEM Hospital Mumbai">KEM Hospital Mumbai</option>
+            <option value="Sion Hospital Mumbai">Sion Hospital Mumbai</option>
+            <option value="Nair Hospital Mumbai">Nair Hospital Mumbai</option>
+            <option value="Cooper Hospital Mumbai">Cooper Hospital Mumbai</option>
+            <option value="Baba Hospital Mumbai">Baba Hospital Mumbai</option>
+            <option value="Rajawadi Hospital Mumbai">Rajawadi Hospital Mumbai</option>
+            <option value="Shatabdi Hospital Mumbai">Shatabdi Hospital Mumbai</option>
+            <option value="Bhabha Hospital Mumbai">Bhabha Hospital Mumbai</option>
+            <option value="Dr RN Cooper Hospital Mumbai">Dr RN Cooper Hospital Mumbai</option>
 
-<label>OPD / Doctor Room:</label>
-<select name="opd" id="opd" required>
-<option value="">-- Pehle Bimari Chuno --</option>
-<option value="OPD 101 - General Medicine" data-disease="Fever / Sardi Khasi">OPD 101 - General Medicine</option>
-<option value="OPD 201 - Cardiology" data-disease="Heart / BP">OPD 201 - Cardiology</option>
-<option value="OPD 301 - Dermatology" data-disease="Skin / Allergy">OPD 301 - Dermatology</option>
-<option value="OPD 401 - Orthopedics" data-disease="Ortho / Haddi">OPD 401 - Orthopedics</option>
-<option value="OPD 501 - Gynecology" data-disease="Gynecology">OPD 501 - Gynecology</option>
-</select>
+            <!-- Pune 4 -->
+            <option value="Sasoon Hospital Pune">Sasoon Hospital Pune</option>
+            <option value="Civil Hospital Pune">Civil Hospital Pune</option>
+            <option value="Aundh Hospital Pune">Aundh Hospital Pune</option>
+            <option value="KEM Hospital Pune">KEM Hospital Pune</option>
 
-<label>Patient Name:</label>
-<input type="text" name="patient_name" required>
+            <!-- Nagpur 3 -->
+            <option value="GMCH Nagpur">GMCH Nagpur</option>
+            <option value="Indira Gandhi Hospital Nagpur">Indira Gandhi Hospital Nagpur</option>
+            <option value="MAHAN Trust Hospital Nagpur">MAHAN Trust Hospital Nagpur</option>
 
-<label>Address:</label>
-<input type="text" name="address" required>
+            <!-- Nashik 2 -->
+            <option value="Civil Hospital Nashik">Civil Hospital Nashik</option>
+            <option value="Bhabha Hospital Nashik">Bhabha Hospital Nashik</option>
 
-<input type="hidden" name="amount" value="30">
+            <!-- Aurangabad 2 -->
+            <option value="GMCH Aurangabad">GMCH Aurangabad</option>
+            <option value="Ghati Hospital Aurangabad">Ghati Hospital Aurangabad</option>
 
-<button type="submit">🎫 Token Generate - Pay ₹30</button>
-</form>
+            <!-- Solapur 2 -->
+            <option value="Irrwin Hospital Solapur">Irrwin Hospital Solapur</option>
+            <option value="Civil Hospital Solapur">Civil Hospital Solapur</option>
 
-<script>
-document.getElementById('disease').addEventListener('change', function() {
-var disease = this.value;
-var opdSelect = document.getElementById('opd');
-for(var i=0; i<opdSelect.options.length; i++) {
-opdSelect.options[i].style.display = 'none';
-}
-opdSelect.options[0].style.display = 'block';
-for(var i=1; i<opdSelect.options.length; i++) {
-if(opdSelect.options[i].getAttribute('data-disease') == disease) {
-opdSelect.options[i].style.display = 'block';
-opdSelect.value = opdSelect.options[i].value;
-}
-});
-</script>
+            <!-- Kolhapur 2 -->
+            <option value="CPR Hospital Kolhapur">CPR Hospital Kolhapur</option>
+            <option value="District Hospital Kolhapur">District Hospital Kolhapur</option>
 
-{% else %}
-<div class="token-slip">
-<div>Token Number</div>
-<div class="token-no">#{{patient.id}}</div>
-<div>{{patient.patient_name}}</div>
-<div style="color:#007bff; font-weight:bold;">{{patient.hospital}}</div>
-<div>{{patient.opd}}</div>
-<div><b>Bimari:</b> {{patient.disease}}</div>
-<div>Fee: ₹{{patient.amount}}</div>
-<form method="post" action="/checkin/{{patient.id}}">
-<button type="submit" style="background:#007bff;">🏥 Check In</button>
-</form>
-</div>
-{% endif %}
+            <!-- Single District Hospitals 25 -->
+            <option value="Civil Hospital Sangli">Civil Hospital Sangli</option>
+            <option value="Civil Hospital Satara">Civil Hospital Satara</option>
+            <option value="Civil Hospital Ahmednagar">Civil Hospital Ahmednagar</option>
+            <option value="Civil Hospital Dhule">Civil Hospital Dhule</option>
+            <option value="Civil Hospital Jalgaon">Civil Hospital Jalgaon</option>
+            <option value="IMCH Amravati">IMCH Amravati</option>
+            <option value="District Hospital Amravati">District Hospital Amravati</option>
+            <option value="District Hospital Akola">District Hospital Akola</option>
+            <option value="District Hospital Latur">District Hospital Latur</option>
+            <option value="District Hospital Osmanabad">District Hospital Osmanabad</option>
+            <option value="District Hospital Beed">District Hospital Beed</option>
+            <option value="Dr Shankarrao Hospital Nanded">Dr Shankarrao Hospital Nanded</option>
+            <option value="District Hospital Parbhani">District Hospital Parbhani</option>
+            <option value="District Hospital Hingoli">District Hospital Hingoli</option>
+            <option value="District Hospital Ratnagiri">District Hospital Ratnagiri</option>
+            <option value="District Hospital Sindhudurg">District Hospital Sindhudurg</option>
+            <option value="District Hospital Raigad">District Hospital Raigad</option>
+            <option value="Thane Civil Hospital">Thane Civil Hospital</option>
+            <option value="District Hospital Palghar">District Hospital Palghar</option>
+            <option value="District Hospital Gondia">District Hospital Gondia</option>
+            <option value="District Hospital Bhandara">District Hospital Bhandara</option>
+            <option value="District Hospital Wardha">District Hospital Wardha</option>
+            <option value="District Hospital Yavatmal">District Hospital Yavatmal</option>
+            <option value="District Hospital Washim">District Hospital Washim</option>
+            <option value="District Hospital Buldhana">District Hospital Buldhana</option>
+            <option value="District Hospital Jalna">District Hospital Jalna</option>
+        </select>
+
+        <label>Select Bimari / Disease:</label>
+        <select name="disease" id="disease" required>
+            <option value="">-- Bimari Chuno --</option>
+            <option value="Fever / Sardi Khasi / Viral">Fever / Sardi Khasi / Viral</option>
+            <option value="Heart / BP / Chest Pain">Heart / BP / Chest Pain</option>
+            <option value="Skin / Allergy / Khujli">Skin / Allergy / Khujli</option>
+            <option value="Ortho / Haddi / Fracture">Ortho / Haddi / Fracture</option>
+            <option value="Gynecology / Pregnancy">Gynecology / Pregnancy</option>
+            <option value="Eye / Aankh">Eye / Aankh</option>
+            <option value="ENT / Kaan Naak Gala">ENT / Kaan Naak Gala</option>
+            <option value="Pediatric / Bacche">Pediatric / Bacche</option>
+            <option value="Dental / Daant">Dental / Daant</option>
+            <option value="Surgery / Operation">Surgery / Operation</option>
+        </select>
+
+        <label>OPD / Doctor Room:</label>
+        <select name="opd" id="opd" required>
+            <option value="">-- Pehle Bimari Chuno --</option>
+            <option value="OPD 101 - General Medicine" data-disease="Fever / Sardi Khasi / Viral">OPD 101 - General Medicine</option>
+            <option value="OPD 201 - Cardiology" data-disease="Heart / BP / Chest Pain">OPD 201 - Cardiology</option>
+            <option value="OPD 301 - Dermatology" data-disease="Skin / Allergy / Khujli">OPD 301 - Dermatology</option>
+            <option value="OPD 401 - Orthopedics" data-disease="Ortho / Haddi / Fracture">OPD 401 - Orthopedics</option>
+            <option value="OPD 501 - Gynecology" data-disease="Gynecology / Pregnancy">OPD 501 - Gynecology</option>
+            <option value="OPD 601 - Ophthalmology" data-disease="Eye / Aankh">OPD 601 - Ophthalmology</option>
+            <option value="OPD 701 - ENT" data-disease="ENT / Kaan Naak Gala">OPD 701 - ENT</option>
+            <option value="OPD 801 - Pediatrics" data-disease="Pediatric / Bacche">OPD 801 - Pediatrics</option>
+            <option value="OPD 901 - Dental" data-disease="Dental / Daant">OPD 901 - Dental</option>
+            <option value="OPD 1001 - Surgery" data-disease="Surgery / Operation">OPD 1001 - Surgery</option>
+        </select>
+
+        <label>Patient Name:</label>
+        <input type="text" name="patient_name" required placeholder="Pura naam likhe">
+
+        <label>Address:</label>
+        <input type="text" name="address" required placeholder="Pura address">
+
+        <input type="hidden" name="amount" value="30">
+
+        <button type="submit">🎫 Token Generate - Pay ₹30</button>
+    </form>
+
+    <script>
+    // Bimari select karte hi OPD auto select
+    document.getElementById('disease').addEventListener('change', function() {
+        var disease = this.value;
+        var opdSelect = document.getElementById('opd');
+
+        for(var i=0; i<opdSelect.options.length; i++) {
+            opdSelect.options[i].style.display = 'none';
+        }
+        opdSelect.options[0].style.display = 'block';
+
+        for(var i=1; i<opdSelect.options.length; i++) {
+            if(opdSelect.options[i].getAttribute('data-disease') == disease) {
+                opdSelect.options[i].style.display = 'block';
+                opdSelect.value = opdSelect.options[i].value;
+            }
+        }
+    });
+    </script>
+
+    {% else %}
+    <div class="token-slip">
+        <div style="font-size:14px; color:#666;">Token Number</div>
+        <div class="token-no">#{{patient.id}}</div>
+        <div class="name">{{patient.patient_name}}</div>
+        <div style="font-size:18px; color:#007bff; font-weight:bold; margin:8px 0;">{{patient.hospital}}</div>
+        <div style="font-size:16px; margin:5px 0;">{{patient.opd}}</div>
+        <div style="font-size:16px; margin:5px 0;"><b>Bimari:</b> {{patient.disease}}</div>
+        <div style="font-size:16px; margin:10px 0;">Fee: ₹{{patient.amount}}</div>
+
+        <div class="upi">
+            <div style="font-weight:bold; margin-bottom:8px;">📱 UPI Payment</div>
+            <div class="upi-id">hospital@upi</div>
+            <div style="font-size:13px; margin-top:5px;">Scan & Pay ₹30</div>
+        </div>
+
+        <form method="post" action="/checkin/{{patient.id}}">
+            <button type="submit" style="background:#007bff;">🏥 Hospital Pahuch Gaya - Check In</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
 </body>
 </html>
