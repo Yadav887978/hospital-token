@@ -31,17 +31,38 @@ class Patient(db.Model):
 with app.app_context():
     db.create_all()
 
+# Maharashtra ke Govt Hospital ka list - tu aur add kar sakta hai
 HOSPITAL_LIST = [
     'JJ Hospital, Mumbai',
     'KEM Hospital, Mumbai',
     'Sion Hospital, Mumbai',
     'Nair Hospital, Mumbai',
+    'Cooper Hospital, Mumbai',
     'B.J. Medical College, Pune',
     'Sassoon Hospital, Pune',
     'Civil Hospital, Nagpur',
-    'Civil Hospital, Thane',
+    'Mayo Hospital, Nagpur',
     'GMCH, Aurangabad',
-    'Civil Hospital, Nashik'
+    'Civil Hospital, Thane',
+    'R.C.S.M. GMC, Kolhapur',
+    'Civil Hospital, Nashik',
+    'Civil Hospital, Solapur',
+    'Civil Hospital, Jalgaon',
+    'Civil Hospital, Dhule',
+    'Civil Hospital, Ratnagiri',
+    'Civil Hospital, Amravati',
+    'GMCH, Akola',
+    'GMCH, Chandrapur',
+    'Civil Hospital, Yavatmal',
+    'Civil Hospital, Sangli',
+    'Civil Hospital, Satara',
+    'Civil Hospital, Kolhapur',
+    'Civil Hospital, Latur',
+    'Civil Hospital, Beed',
+    'Civil Hospital, Osmanabad',
+    'Civil Hospital, Parbhani',
+    'Civil Hospital, Hingoli',
+    'Civil Hospital, Nanded'
 ]
 
 OPD_LIST = [
@@ -50,12 +71,16 @@ OPD_LIST = [
     'OPD 103 - ENT',
     'OPD 104 - Skin & VD',
     'OPD 105 - Dental',
-    'OPD 106 - Eye',
+    'OPD 106 - Eye/Opthalmology',
     'OPD 107 - Pediatrics',
-    'OPD 108 - Gynecology'
+    'OPD 108 - Gynecology',
+    'OPD 109 - Surgery',
+    'OPD 110 - Psychiatry',
+    'OPD 111 - TB & Chest',
+    'OPD 112 - Cardiology'
 ]
 
-DISEASE_LIST = ['Fever', 'Cough & Cold', 'Body Pain', 'Stomach Pain', 'Skin Problem', 'Eye Problem', 'Tooth Pain', 'BP/Sugar Check', 'Other']
+DISEASE_LIST = ['Fever', 'Cough & Cold', 'Body Pain', 'Stomach Pain', 'Skin Problem', 'Eye Problem', 'Tooth Pain', 'BP/Sugar Check', 'Headache', 'Other']
 
 # TERA UPI ID
 UPI_ID = '8879789073-2@ybl'
