@@ -1,114 +1,97 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import qrcode
-from io import BytesIO
-import os, base64
+import io
+import base64
 
 app = Flask(__name__)
-app.secret_key = 'hospital_secret_key_123'
-
-# Render PostgreSQL fix - ye line bahut zaruri hai
-database_url = os.environ.get('DATABASE_URL')
-if database_url:
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
-
+app.config['SECRET_KEY'] = 'hospital_secret_123'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+UPI_ID = "8879789073-2@ybl"
+HOSPITAL_NAME = "Hospital Token"
+FEE = 30
+
 class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hospital = db.Column(db.String(150), nullable=False)
-    opd = db.Column(db.String(50), nullable=False)
-    disease = db.Column(db.String(100), nullable=False)
+    hospital = db.Column(db.String(200), nullable=False)
+    opd = db.Column(db.String(100), nullable=False)
+    disease = db.Column(db.String(200), nullable=False)
     patient_name = db.Column(db.String(100), nullable=False)
-    address = db.Column(db.String(200), nullable=False)
-    amount = db.Column(db.Integer, default=0)
-    upi_id = db.Column(db.String(100), default='8879789073-2@ybl')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    address = db.Column(db.String(300), nullable=False)
+    amount = db.Column(db.Integer, default=30)
+    upi_id = db.Column(db.String(100))
+    status = db.Column(db.String(20), default='Booked')  # Booked, Arrived, Called
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
-# Table auto create
 with app.app_context():
-    try:
-        db.create_all()
-        print("Database tables created successfully!")
-    except Exception as e:
-        print(f"DB Error: {e}")
+    db.create_all()
+    print("Database tables created successfully!")
 
-HOSPITAL_LIST = [
-    'JJ Hospital, Mumbai','KEM Hospital, Mumbai','Sion Hospital, Mumbai','Nair Hospital, Mumbai',
-    'Cooper Hospital, Mumbai','B.J. Medical College, Pune','Sassoon Hospital, Pune',
-    'Civil Hospital, Nagpur','Mayo Hospital, Nagpur','GMCH, Aurangabad','Civil Hospital, Thane',
-    'R.C.S.M. GMC, Kolhapur','Civil Hospital, Nashik','Civil Hospital, Solapur','Civil Hospital, Jalgaon',
-    'Civil Hospital, Dhule','Civil Hospital, Ratnagiri','Civil Hospital, Amravati','GMCH, Akola',
-    'GMCH, Chandrapur','Civil Hospital, Yavatmal','Civil Hospital, Sangli','Civil Hospital, Satara',
-    'Civil Hospital, Kolhapur','Civil Hospital, Latur','Civil Hospital, Beed','Civil Hospital, Osmanabad',
-    'Civil Hospital, Parbhani','Civil Hospital, Hingoli','Civil Hospital, Nanded'
-]
-
-OPD_LIST = [
-    'OPD 101 - General Medicine','OPD 102 - Orthopedics','OPD 103 - ENT','OPD 104 - Skin & VD',
-    'OPD 105 - Dental','OPD 106 - Eye/Opthalmology','OPD 107 - Pediatrics','OPD 108 - Gynecology',
-    'OPD 109 - Surgery','OPD 110 - Psychiatry','OPD 111 - TB & Chest','OPD 112 - Cardiology'
-]
-
-DISEASE_LIST = ['Fever','Cough & Cold','Body Pain','Stomach Pain','Skin Problem','Eye Problem','Tooth Pain','BP/Sugar Check','Headache','Other']
-
-UPI_ID = '8879789073-2@ybl'
-HOSPITAL_NAME = 'Hospital Token'
+def generate_qr(data):
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    return base64.b64encode(buf.getvalue()).decode()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    try:
-        if request.method == 'POST':
-            hospital = request.form.get('hospital')
-            opd = request.form.get('opd')
-            disease = request.form.get('disease')
-            patient_name = request.form.get('patient_name')
-            address = request.form.get('address')
-            amount = request.form.get('amount') or 0
+    if request.method == 'POST':
+        hospital = request.form.get('hospital')
+        opd = request.form.get('opd')
+        disease = request.form.get('disease')
+        patient_name = request.form.get('patient_name')
+        address = request.form.get('address')
+        amount = FEE  # Fixed ₹30
 
-            if hospital and opd and disease and patient_name and address and amount:
-                new_patient = Patient(hospital=hospital, opd=opd, disease=disease,
-                                    patient_name=patient_name, address=address,
-                                    amount=amount, upi_id=UPI_ID)
-                db.session.add(new_patient)
-                db.session.commit()
-                flash(f'Token #{new_patient.id} ready! ₹{amount} UPI pay karke slip dikhao', 'success')
-            else:
-                flash('Sab details bharo + Amount dalo bhai', 'error')
-            return redirect(url_for('index'))
+        if hospital and opd and disease and patient_name and address:
+            new_patient = Patient(
+                hospital=hospital, opd=opd, disease=disease,
+                patient_name=patient_name, address=address,
+                amount=amount, upi_id=UPI_ID
+            )
+            db.session.add(new_patient)
+            db.session.commit()
+            
+            upi_link = f"upi://pay?pa={UPI_ID}&pn=Hospital Token&am={FEE}&cu=INR"
+            qr_code = generate_qr(upi_link)
+            
+            flash(f'Token #{new_patient.id} generate ho gaya! ₹30 pay karke Check-In kar lena', 'success')
+            return render_template('index.html', patient=new_patient, qr_code=qr_code, upi_link=upi_link, fee=FEE)
+        else:
+            flash('Sab details bharo bhai', 'error')
+    
+    return render_template('index.html', fee=FEE)
 
-        patients = Patient.query.order_by(Patient.id.desc()).limit(50).all()
+@app.route('/checkin/<int:id>')
+def checkin(id):
+    patient = Patient.query.get(id)
+    if patient:
+        patient.status = 'Arrived'
+        db.session.commit()
+        flash(f'Check-In ho gaya! Token #{id} ab doctor ke paas dikh raha hai', 'success')
+    return redirect(url_for('index'))
 
-        upi_link = f"upi://pay?pa={UPI_ID}&pn={HOSPITAL_NAME}&am=&cu=INR"
-        qr = qrcode.make(upi_link)
-        img_io = BytesIO()
-        qr.save(img_io, 'PNG')
-        img_io.seek(0)
-        qr_base64 = base64.b64encode(img_io.getvalue()).decode()
+@app.route('/doctor/<opd>')
+def doctor_panel(opd):
+    patients = Patient.query.filter_by(opd=opd, status='Arrived').order_by(Patient.id).all()
+    booked = Patient.query.filter_by(opd=opd, status='Booked').count()
+    return render_template('doctor.html', patients=patients, opd=opd, booked=booked)
 
-        return render_template('index.html', patients=patients,
-                             hospital_list=HOSPITAL_LIST,
-                             opd_list=OPD_LIST,
-                             disease_list=DISEASE_LIST,
-                             upi_id=UPI_ID, qr_code=qr_base64)
-    except Exception as e:
-        return f"Error: {str(e)} <br><br> Logs check kar bhai"
-
-@app.route('/qr')
-def qr_code():
-    url = request.url_root
-    qr = qrcode.make(url)
-    img_io = BytesIO()
-    qr.save(img_io, 'PNG')
-    img_io.seek(0)
-    return send_file(img_io, mimetype='image/png')
+@app.route('/call/<int:id>')
+def call_patient(id):
+    patient = Patient.query.get(id)
+    if patient:
+        patient.status = 'Called'
+        db.session.commit()
+    return redirect(url_for('doctor_panel', opd=patient.opd))
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
