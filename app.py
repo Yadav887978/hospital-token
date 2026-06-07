@@ -32,7 +32,6 @@ init_db()
 DISEASES = ["Fever / Sardi Khasi", "Heart / BP", "Skin / Allergy", "Ortho / Haddi", "Gynecology"]
 
 # ============== 36 HOSPITAL + 5 BIMARI KA OPD ==============
-# TODO: Hospital se confirm karke asli OPD number bhar de
 OPD_MAP = {
     # MUMBAI - 8
     "Sir J.J. Hospital Mumbai": {"Fever / Sardi Khasi": "OPD 15 - General Medicine", "Heart / BP": "OPD 22 - Cardiology", "Skin / Allergy": "OPD 8 - Dermatology", "Ortho / Haddi": "OPD 31 - Orthopedics", "Gynecology": "OPD 44 - Gynecology"},
@@ -95,11 +94,10 @@ OPD_MAP = {
 
 HOSPITALS = list(OPD_MAP.keys())
 
-# ============== DOCTOR PASSWORD - HAR OPD KE LIYE ==============
+# ============== DOCTOR PASSWORD ==============
 OPD_PASSWORDS = {}
 for hospital in OPD_MAP:
     for disease, opd_name in OPD_MAP[hospital].items():
-        # Password format: hospital ka short + opd number
         short = ''.join([w[0].lower() for w in hospital.split()[:2]])
         num = ''.join([c for c in opd_name if c.isdigit()])
         OPD_PASSWORDS[opd_name] = short + num
@@ -114,15 +112,29 @@ def generate_qr(data):
     buf.seek(0)
     return base64.b64encode(buf.getvalue()).decode()
 
+def generate_upi_qr(amount, token_id, patient_name):
+    # ========== YAHI APNI UPI ID DAAL DE BHAI ==========
+    upi_id = "opdmitra@upi" # PhonePe / GPay / Paytm UPI ID
+    upi_name = "OpdMitra Hospital"
+    # ===================================================
+
+    upi_link = f"upi://pay?pa={upi_id}&pn={upi_name}&am={amount}&cu=INR&tn=Token{token_id}-{patient_name}"
+
+    qr = qrcode.QRCode(version=1, box_size=8, border=4)
+    qr.add_data(upi_link)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return base64.b64encode(buf.getvalue()).decode()
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         hospital = request.form['hospital']
         disease = request.form['disease']
-
-        # ========== AUTO OPD DRAFT ==========
-        opd = OPD_MAP[hospital][disease]
-        # =====================================
+        opd = OPD_MAP[hospital][disease] # Auto OPD
 
         patient_name = request.form['patient_name']
         address = request.form['address']
@@ -140,13 +152,16 @@ def index():
         patient = c.fetchone()
         conn.close()
 
-        # QR code banega
+        # Status QR
         qr_data = f"http://localhost:5000/check/{token_id}"
         qr_img = generate_qr(qr_data)
 
-        return render_template('index.html', patient=patient, hospitals=HOSPITALS, diseases=DISEASES, opd_map=OPD_MAP, qr_img=qr_img)
+        # Fee QR - NAYA
+        fee_qr = generate_upi_qr(amount, token_id, patient_name)
 
-    return render_template('index.html', patient=None, hospitals=HOSPITALS, diseases=DISEASES, opd_map=OPD_MAP, qr_img=None)
+        return render_template('index.html', patient=patient, hospitals=HOSPITALS, diseases=DISEASES, opd_map=OPD_MAP, qr_img=qr_img, fee_qr=fee_qr)
+
+    return render_template('index.html', patient=None, hospitals=HOSPITALS, diseases=DISEASES, opd_map=OPD_MAP, qr_img=None, fee_qr=None)
 
 @app.route('/check/<int:token_id>')
 def check_token(token_id):
@@ -193,21 +208,34 @@ def doctor_panel():
     conn = sqlite3.connect('tokens.db')
     c = conn.cursor()
 
-    # 5 patient ke baad break
     c.execute("SELECT COUNT(*) FROM tokens WHERE opd=? AND status='Completed' AND DATE(created_at)=DATE('now')", (opd,))
     completed_count = c.fetchone()[0]
 
+    c.execute("SELECT COUNT(*) FROM tokens WHERE opd=? AND status='Missed'", (opd,))
+    missed_count = c.fetchone()[0]
+
+    # 5 ke baad break - par missed call button rahega
     if completed_count >= 5:
         conn.close()
-        return f'''<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>body{{font-family:Arial;background:#f0f2f5;text-align:center;padding:100px 20px}}
-      .box{{max-width:400px;margin:auto;background:white;padding:40px;border-radius:12px}}
-        h2{{color:#ff9800}} button{{padding:12px 24px;background:#28a745;color:white;border:none;border-radius:8px;cursor:pointer;margin-top:20px}}</style>
-        </head><body><div class="box"><h2>☕ Break Time!</h2>
-        <p>Aapne aaj {completed_count} patient dekh liye.</p>
-        <p>5 min break le lo, fir refresh karo</p>
-        <button onclick="location.reload()">Refresh Kare</button><br><br>
-        <a href="/doctor/logout" style="color:red">Logout</a></div></body></html>'''
+        return f'''<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>body{{font-family:Arial;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);text-align:center;padding:60px 20px;min-height:100vh}}
+     .box{{max-width:420px;margin:auto;background:white;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}}
+        h2{{color:#ff9800;font-size:32px;margin-bottom:15px}}
+      .count{{font-size:60px;font-weight:bold;color:#667eea;margin:20px 0}}
+        button{{padding:15px 24px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;border-radius:12px;cursor:pointer;margin:10px 0;width:100%;font-size:16px;font-weight:bold}}
+     .red{{background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%)}}
+        p{{color:#666;font-size:15px;line-height:1.6;margin:8px 0}}</style>
+        </head><body>
+        <div class="box">
+        <h2>☕ Break Time!</h2>
+        <p>Aapne aaj</p>
+        <div class="count">{completed_count}</div>
+        <p>patient complete kar liye</p>
+        <p style="margin-top:20px;">5 min break le lo</p>
+        {f'<form method="post" action="/doctor/call_missed"><button type="submit" class="red">📢 Missed Patient Call Kare ({missed_count})</button></form>' if missed_count > 0 else '<p style="color:#28a745">✅ Koi missed patient nahi hai</p>'}
+        <button onclick="location.reload()">🔄 Break Khatam - Refresh</button>
+        <br><a href="/doctor/logout" style="color:red;text-decoration:none;margin-top:15px;display:block">Logout</a>
+        </div></body></html>'''
 
     c.execute("SELECT * FROM tokens WHERE opd=? AND status='Called' ORDER BY called_at DESC LIMIT 1", (opd,))
     current = c.fetchone()
@@ -216,7 +244,7 @@ def doctor_panel():
     c.execute("SELECT * FROM tokens WHERE opd=? AND status='Missed' ORDER BY called_at ASC", (opd,))
     missed = c.fetchall()
     conn.close()
-    return render_template('doctor.html', opd=opd, current=current, waiting=waiting, missed=missed, missed_count=len(missed), completed_count=completed_count)
+    return render_template('doctor.html', opd=opd, current=current, waiting=waiting, missed=missed, missed_count=missed_count, completed_count=completed_count)
 
 @app.route('/doctor/next', methods=['POST'])
 def next_patient():
